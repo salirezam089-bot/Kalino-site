@@ -1,1061 +1,882 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kalino Shop — نسخه جامع</title>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --white: #ffffff;
-      --muted: #f4f6f8;
-      --surface: #f1f3f5;
-      --text: #111214;
-      --sub: #69707a;
-      --accent: #ff5a5f;
-      --green: #41b883;
-      --shadow: 0 6px 18px rgba(16,24,40,0.06);
-      --dark-bg: #333;
-      --dark-card: #555;
-      --dark-text: #fff;
-      --dark-muted: #444;
-      --dark-surface: #666;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Vazirmatn', sans-serif;
-      background: var(--white);
-      color: var(--text);
-      direction: rtl;
-      padding-bottom: 88px;
-    }
-    .dark-mode { background: var(--dark-bg); color: var(--dark-text); }
-    .dark-mode header, .dark-mode .bottom-nav, .dark-mode .cart-footer { background: var(--dark-muted); border-color: #555; }
-    .dark-mode .cat-card, .dark-mode .prod-card, .dark-mode .cart-item, .dark-mode .account-card { background: var(--dark-card); }
-    .dark-mode .search { background: linear-gradient(135deg, rgba(68,68,68,0.9), rgba(85,85,85,0.7)); }
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 16px;
-      background: linear-gradient(180deg, #fff, #fbfdff 60%);
-      border-bottom: 1px solid #eef1f4;
-      backdrop-filter: blur(6px);
-    }
-    header .left {
-      position: absolute;
-      left: 12px;
-      top: 8px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    header .right {
-      position: absolute;
-      right: 12px;
-      top: 8px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .brand { font-weight: 700; font-size: 18px; }
-    .icon-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: var(--muted);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border: 1px solid #e8edf1;
-      transition: transform .12s ease;
-    }
-    .icon-btn:active { transform: scale(.98); }
-    .address-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 6px 10px;
-      border-radius: 8px;
-      background: var(--muted);
-      border: 1px solid #e8edf1;
-      cursor: pointer;
-      font-size: 14px;
-      transition: transform .12s ease;
-    }
-    .address-btn:active { transform: scale(.98); }
-    .address-btn.bold { font-weight: 700; }
-    .dark-mode .address-btn { background: var(--dark-muted); border-color: #555; }
-    .search-wrap { padding: 8px 16px; }
-    .search {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(244,246,248,0.7));
-      padding: 6px 12px;
-      border-radius: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      transition: all 0.3s ease;
-    }
-    .search:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .search input {
-      flex: 1;
-      border: 0;
-      background: transparent;
-      outline: none;
-      font-size: 13px;
-      color: var(--text);
-      transition: transform 0.2s ease;
-    }
-    .search input:focus { transform: scale(1.02); }
-    .search input::placeholder { color: var(--sub); opacity: 0.8; }
-    .search-icon, .clear-icon {
-      font-size: 16px;
-      cursor: pointer;
-      color: var(--sub);
-      transition: color 0.2s ease;
-    }
-    .clear-icon:hover { color: var(--accent); }
-    main { padding: 6px 16px 120px; }
-    h2.section-title { font-size: 16px; margin-bottom: 12px; font-weight: 700; }
-    .categories { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
-    .cat-card {
-      background: var(--muted);
-      padding: 10px;
-      border-radius: 12px;
-      text-align: center;
-      cursor: pointer;
-      transition: transform .14s ease, box-shadow .14s ease;
-    }
-    .cat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(16,24,40,0.06); }
-    .cat-card .emoji { font-size: 20px; margin-bottom: 6px; }
-    .carousel {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      scroll-snap-type: x mandatory;
-      padding-bottom: 6px;
-    }
-    .carousel > * { scroll-snap-align: start; }
-    .carousel::-webkit-scrollbar { height: 8px; }
-    .prod-card {
-      min-width: 172px;
-      background: var(--white);
-      border-radius: 12px;
-      padding: 10px;
-      flex-shrink: 0;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      transition: transform 0.2s ease;
-    }
-    .prod-card.highlight { transform: scale(1.05); box-shadow: 0 4px 12px var(--accent); }
-    .prod-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; }
-    .prod-card .title { font-weight: 600; font-size: 14px; }
-    .prod-card .price { color: var(--green); font-weight: 600; }
-    .prod-card .actions { display: flex; gap: 8px; align-items: center; margin-top: auto; }
-    .btn-primary {
-      flex: 1;
-      padding: 8px;
-      border-radius: 10px;
-      border: 0;
-      background: var(--green);
-      color: #fff;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .btn-outline {
-      padding: 8px;
-      border-radius: 10px;
-      border: 1px solid #e6eaee;
-      background: transparent;
-      cursor: pointer;
-    }
-    .page { display: none; }
-    .page.active { display: block; }
-    .cart-list { display: flex; flex-direction: column; gap: 10px; }
-    .cart-item {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      background: linear-gradient(135deg, var(--white), var(--muted));
-      padding: 10px;
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      transition: transform 0.3s ease, opacity 0.3s ease;
-      transform: translateX(20px);
-      opacity: 0;
-    }
-    .cart-item.show {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    .cart-item img { width: 72px; height: 72px; border-radius: 8px; object-fit: cover; }
-    .cart-item-info { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-    .cart-item-title { font-weight: 700; }
-    .cart-item-price { color: var(--green); font-weight: 600; }
-    .qty-controls { display: flex; align-items: center; gap: 8px; }
-    .qty-controls button {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      border: 0;
-      background: var(--green);
-      color: #fff;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-    .qty-controls button:hover { background: #2a905e; }
-    .remove-btn { background: transparent; border: 0; color: var(--accent); font-size: 18px; cursor: pointer; }
-    .cart-footer {
-      position: fixed;
-      bottom: 72px;
-      left: 0;
-      right: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 16px;
-      border-radius: 12px;
-      margin-top: 8px;
-      background: linear-gradient(180deg, #fff, #fbfdff);
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
-      z-index: 10;
-    }
-    .total { font-weight: 700; font-size: 16px; }
-    .items-count { font-size: 13px; color: var(--sub); }
-    .checkout, .continue-shopping {
-      padding: 10px 14px;
-      border-radius: 12px;
-      background: var(--green);
-      color: #fff;
-      border: 0;
-      cursor: pointer;
-      font-weight: 700;
-    }
-    .continue-shopping { background: var(--muted); color: var(--text); }
-    .account-card { background: var(--muted); padding: 12px; border-radius: 12px; display: flex; flex-direction: column; gap: 10px; }
-    .account-row { display: flex; justify-content: space-between; align-items: center; }
-    .small-btn { padding: 8px 10px; border-radius: 10px; border: 0; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.06); cursor: pointer; }
-    .orders-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
-    .order-item { background: #fff; padding: 10px; border-radius: 10px; box-shadow: var(--shadow); font-size: 14px; }
-    .dark-mode .order-item { background: var(--dark-card); }
-    .account-card .wallet-section {
-      background: linear-gradient(to right, var(--accent), var(--white));
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 8px;
-      text-align: center;
-      color: var(--text);
-    }
-    .discount-bar {
-      background: var(--accent);
-      color: var(--white);
-      padding: 10px 16px;
-      border-radius: 12px;
-      margin: 14px 0;
-      position: relative;
-    }
-    .discount-bar .header {
-      position: sticky;
-      top: 0;
-      background: var(--accent);
-      z-index: 10;
-      padding-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .discount-bar .carousel { display: flex; gap: 12px; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; padding-bottom: 6px; }
-    .discount-bar .carousel > * { scroll-snap-align: start; }
-    .dark-mode .discount-bar { background: #cc494c; }
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-    }
-    .modal-content {
-      background: var(--white);
-      padding: 20px;
-      border-radius: 12px;
-      text-align: right;
-      min-width: 280px;
-      max-width: 90%;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-    .dark-mode .modal-content { background: var(--dark-card); }
-    .modal-content h3 { margin-bottom: 16px; font-size: 16px; font-weight: 700; }
-    .small-btn.cancel { background: var(--muted); color: var(--text); }
-    .toast {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 92px;
-      background: rgba(20,20,20,.9);
-      color: #fff;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-weight: 600;
-      z-index: 60;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .18s ease, transform .18s ease;
-    }
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(-6px);
-      pointer-events: auto;
-    }
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 72px;
-      background: var(--white);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      border-top: 1px solid #eef1f4;
-      z-index: 50;
-    }
-    .bottom-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      color: var(--sub);
-      cursor: pointer;
-      font-size: 12px;
-    }
-    .bottom-btn.active { color: var(--green); font-weight: 700; }
-    .loading {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 4px solid var(--muted);
-      border-top: 4px solid var(--green);
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-    @media (min-width: 720px) { .categories { grid-template-columns: repeat(6, 1fr); } }
-    @media (max-width: 420px) { .categories { grid-template-columns: repeat(3, 1fr); } .prod-card { min-width: 150px; } }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalino Shop — نسخه جامع</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white:#ffffff; --muted:#f4f6f8; --surface:#f1f3f5; --text:#111214; --sub:#69707a;
+  --accent:#ff5a5f; --green:#41b883; --shadow:0 6px 18px rgba(16,24,40,0.06);
+  --dark-bg: #333; --dark-card: #555; --dark-text: #fff; --dark-muted: #444; --dark-surface: #666;
+}
+* {box-sizing:border-box;margin:0;padding:0;}
+body {font-family:'Vazirmatn',sans-serif;background:var(--white);color:var(--text);direction:rtl;padding-bottom:88px;}
+.dark-mode {background: var(--dark-bg);color: var(--dark-text);}
+.dark-mode header,.dark-mode .bottom-nav,.dark-mode .cart-footer {background: var(--dark-muted);border-color: #555;}
+.dark-mode .cat-card,.dark-mode .prod-card,.dark-mode .cart-item,.dark-mode .account-card {background: var(--dark-card);}
+.dark-mode .search {background: linear-gradient(135deg, rgba(68,68,68,0.9), rgba(85,85,85,0.7));}
+header {position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:12px 16px;background:linear-gradient(180deg,#fff,#fbfdff 60%);border-bottom:1px solid #eef1f4;backdrop-filter:blur(6px);}
+header .left {position:absolute;left:12px;top:8px;display:flex;gap:8px;align-items:center;}
+header .right {position:absolute;right:12px;top:8px;display:flex;gap:8px;align-items:center;}
+.brand {font-weight:700;font-size:18px;}
+.icon-btn {width:44px;height:44px;border-radius:12px;background:var(--muted);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid #e8edf1;transition:transform .12s ease;}
+.icon-btn:active {transform:scale(.98);}
+.address-btn {display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border-radius:8px;background:var(--muted);border:1px solid #e8edf1;cursor:pointer;font-size:14px;transition:transform .12s ease;}
+.address-btn:active {transform:scale(.98);}
+.address-btn.bold {font-weight:700;}
+.dark-mode .address-btn {background:var(--dark-muted);border-color:#555;}
+.search-wrap {padding:8px 16px;}
+.search {width:100%;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(255,255,255,0.9),rgba(244,246,248,0.7));padding:6px 12px;border-radius:20px;box-shadow:0 2px 6px rgba(0,0,0,0.05);transition:all 0.3s ease;}
+.search:hover {box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+.search input {flex:1;border:0;background:transparent;outline:none;font-size:13px;color:var(--text);transition:transform 0.2s ease;}
+.search input:focus {transform:scale(1.02);}
+.search input::placeholder {color:var(--sub);opacity:0.8;}
+.search-icon, .clear-icon {font-size:16px;cursor:pointer;color:var(--sub);transition:color 0.2s ease;}
+.clear-icon:hover {color:var(--accent);}
+main {padding:6px 16px 120px;}
+h2.section-title {font-size:16px;margin-bottom:12px;font-weight:700;}
+.categories {display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+.cat-card {background:var(--muted);padding:10px;border-radius:12px;text-align:center;cursor:pointer;transition:transform .14s ease,box-shadow .14s ease;}
+.cat-card:hover {transform:translateY(-4px);box-shadow:0 8px 20px rgba(16,24,40,0.06);}
+.cat-card .emoji {font-size:20px;margin-bottom:6px;}
+.carousel {display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;scroll-snap-type:x mandatory;padding-bottom:6px;}
+.carousel > * {scroll-snap-align:start;}
+.carousel::-webkit-scrollbar {height:8px;}
+.prod-card {min-width:172px;background:var(--white);border-radius:12px;padding:10px;flex-shrink:0;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;transition:transform 0.2s ease;}
+.prod-card.highlight {transform:scale(1.05);box-shadow:0 4px 12px var(--accent);}
+.prod-card img {width:100%;height:110px;object-fit:cover;border-radius:8px;}
+.prod-card .title {font-weight:600;font-size:14px;}
+.prod-card .price {color:var(--green);font-weight:600;}
+.prod-card .actions {display:flex;gap:8px;align-items:center;margin-top:auto;}
+.btn-primary {flex:1;padding:8px;border-radius:10px;border:0;background:var(--green);color:#fff;cursor:pointer;font-weight:600;}
+.btn-outline {padding:8px;border-radius:10px;border:1px solid #e6eaee;background:transparent;cursor:pointer;}
+.page {display:none;}
+.page.active {display:block;}
+.cart-list {display:flex;flex-direction:column;gap:10px;}
+.cart-item {display:flex;gap:12px;align-items:center;background:var(--muted);padding:10px;border-radius:12px;}
+.cart-item img {width:72px;height:72px;border-radius:8px;object-fit:cover;}
+.cart-item-info {flex:1;display:flex;flex-direction:column;gap:6px;}
+.cart-item-title {font-weight:700;}
+.cart-item-price {color:var(--green);font-weight:600;}
+.qty-controls {display:flex;align-items:center;gap:8px;}
+.qty-controls button {width:34px;height:34px;border-radius:8px;border:0;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.06);cursor:pointer;}
+.remove-btn {background:transparent;border:0;color:var(--accent);font-size:18px;cursor:pointer;}
+.cart-footer {display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;margin-top:8px;background:linear-gradient(180deg,#fff,#fbfdff);}
+.total {font-weight:700;font-size:16px;}
+.checkout {padding:10px 14px;border-radius:12px;background:var(--green);color:#fff;border:0;cursor:pointer;font-weight:700;}
+.account-card {background:var(--muted);padding:12px;border-radius:12px;display:flex;flex-direction:column;gap:10px;}
+.account-row {display:flex;justify-content:space-between;align-items:center;}
+.small-btn {padding:8px 10px;border-radius:10px;border:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:pointer;}
+.orders-list {display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+.order-item {background:#fff;padding:10px;border-radius:10px;box-shadow:var(--shadow);font-size:14px;}
+.dark-mode .order-item {background: var(--dark-card);}
+.account-card .wallet-section {
+  background: linear-gradient(to right, var(--accent), var(--white));
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 8px;
+  text-align: center;
+  color: var(--text);
+}
+.discount-bar {
+  background: var(--accent);
+  color: var(--white);
+  padding: 10px 16px;
+  border-radius: 12px;
+  margin: 14px 0;
+  position: relative;
+}
+.discount-bar .header {
+  position: sticky;
+  top: 0;
+  background: var(--accent);
+  z-index: 10;
+  padding-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.discount-bar .carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 6px;
+}
+.discount-bar .carousel > * {scroll-snap-align: start;}
+.dark-mode .discount-bar {background: #cc494c;}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+.modal-content {
+  background: var(--white);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  min-width: 280px;
+  max-width: 90%;
+}
+.dark-mode .modal-content {background: var(--dark-card);}
+.toast {position:fixed;left:50%;transform:translateX(-50%);bottom:92px;background:rgba(20,20,20,.9);color:#fff;padding:10px 14px;border-radius:10px;font-weight:600;z-index:60;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;}
+.toast.show {opacity:1;transform:translateX(-50%) translateY(-6px);pointer-events:auto;}
+.bottom-nav {position:fixed;left:0;right:0;bottom:0;height:72px;background:var(--white);display:flex;justify-content:space-around;align-items:center;border-top:1px solid #eef1f4;z-index:50;}
+.bottom-btn {display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--sub);cursor:pointer;font-size:12px;}
+.bottom-btn.active {color:var(--green);font-weight:700;}
+@media (min-width:720px){.categories{grid-template-columns:repeat(6,1fr)}}
+@media (max-width:420px){.categories{grid-template-columns:repeat(3,1fr)}.prod-card{min-width:150px}}
+</style>
 </head>
 <body>
-  <header>
-    <div class="left"><div class="icon-btn" id="userBtn" title="حساب کاربری">👤</div></div>
-    <div class="brand">Kalino</div>
-    <div class="right">
-      <div class="address-btn" id="addressBtn" title="انتخاب آدرس">
-        <span id="addressLabel" style="font-size:14px">📍 آدرس</span>
-      </div>
-    </div>
-  </header>
 
-  <div class="search-wrap">
-    <div class="search" role="search">
-      <span class="search-icon">🔍</span>
-      <input id="searchInput" placeholder="جستجو..." aria-label="جستجو محصولات" />
-      <span class="clear-icon" id="clearSearch" title="پاک کردن">×</span>
+<header>
+  <div class="left"><div class="icon-btn" id="userBtn" title="حساب کاربری">👤</div></div>
+  <div class="brand">Kalino</div>
+  <div class="right">
+    <div class="address-btn" id="addressBtn" title="انتخاب آدرس">
+      <span id="addressLabel" style="font-size:14px">📍 آدرس</span>
     </div>
   </div>
+</header>
 
-  <main>
-    <section class="page active" id="homePage">
-      <h2 class="section-title">دسته‌بندی‌ها</h2>
-      <div class="categories" id="categoriesList"></div>
-      <section class="discount-bar" aria-label="تخفیفات روزانه">
-        <div class="header">
-          <h2 class="section-title">تخفیفات روزانه</h2>
-          <div id="discountTimer" style="font-size:14px;font-weight:600;color:var(--white)"></div>
-        </div>
-        <div class="carousel" id="discountItems"></div>
-      </section>
+<div class="search-wrap">
+  <div class="search" role="search">
+    <span class="search-icon">🔍</span>
+    <input id="searchInput" placeholder="جستجو..." aria-label="جستجو محصولات" />
+    <span class="clear-icon" id="clearSearch" title="پاک کردن">×</span>
+  </div>
+</div>
+
+<main>
+  <section class="page active" id="homePage">
+    <h2 class="section-title">دسته‌بندی‌ها</h2>
+    <div class="categories" id="categoriesList"></div>
+    <section class="discount-bar" aria-label="تخفیفات روزانه">
+      <div class="header">
+        <h2 class="section-title">تخفیفات روزانه</h2>
+        <div id="discountTimer" style="font-size:14px;font-weight:600;color:var(--white)"></div>
+      </div>
+      <div class="carousel" id="discountItems"></div>
     </section>
+  </section>
 
-    <section class="page" id="categoryPage">
-      <h2 class="section-title" id="categoryTitle"></h2>
-      <div class="carousel" id="categoryProducts"></div>
-    </section>
+  <section class="page" id="categoryPage">
+    <h2 class="section-title" id="categoryTitle"></h2>
+    <div class="carousel" id="categoryProducts"></div>
+  </section>
 
-    <section class="page" id="cartPage">
-      <h2 class="section-title">سبد خرید</h2>
-      <div id="cartContent">
-        <div class="cart-list" id="cartItems"></div>
-        <div class="cart-footer" id="cartFooter" style="display:none">
-          <div>
-            <div class="items-count" id="itemsCount">۰ آیتم</div>
-            <div class="total" id="cartTotal">۰ تومان</div>
-          </div>
-          <div>
-            <button class="continue-shopping" id="continueShoppingBtn">ادامه خرید</button>
-            <button class="checkout" id="checkoutBtn">ثبت سفارش</button>
-          </div>
+  <section class="page" id="cartPage">
+    <h2 class="section-title">سبد خرید</h2>
+    <div id="cartContent">
+      <div class="cart-list" id="cartItems"></div>
+      <div class="cart-footer" id="cartFooter" style="display:none">
+        <div>
+          <div style="font-size:13px;color:var(--sub)">جمع کل</div>
+          <div class="total" id="cartTotal">۰ تومان</div>
         </div>
-      </div>
-    </section>
-
-    <section class="page" id="accountPage">
-      <div class="settings-icon icon-btn" id="settingsBtn" title="تنظیمات">⚙️</div>
-      <h2 class="section-title">حساب کاربری</h2>
-      <div class="account-card">
-        <div style="display:flex;gap:12px;align-items:center">
-          <div style="width:64px;height:64px;border-radius:12px;background:var(--muted);display:flex;align-items:center;justify-content:center;font-size:28px">👤</div>
-          <div style="flex:1">
-            <div id="acctName" style="font-weight:700">نام کاربر</div>
-            <div id="acctPhone" style="color:var(--sub);margin-top:4px">۰۹۰۰۰۰۰۰۰۰</div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <button class="small-btn" id="editProfileBtn">ویرایش</button>
-            <button class="small-btn" id="logoutBtn">خروج</button>
-          </div>
+        <div>
+          <button class="checkout" id="checkoutBtn">ثبت سفارش</button>
         </div>
-        <div class="wallet-section">
-          <div style="font-size:13px;color:var(--sub)">کیف پول</div>
-          <div id="walletAmount" style="font-weight:700;font-size:16px;margin:6px 0;">۰ تومان</div>
-          <div style="display:flex;gap:8px;justify-content:center">
-            <input id="topupValue" type="number" min="1000" placeholder="مبلغ (تومان)" style="padding:8px;border-radius:10px;border:1px solid #e6eaee;background:#fff" />
-            <button class="small-btn" id="topupBtn">افزایش</button>
-          </div>
-        </div>
-        <div class="account-row" style="margin-top:8px">
-          <button class="small-btn" id="toggleDarkMode">تغییر تم (روشن/تیره)</button>
-        </div>
-        <div style="margin-top:8px">
-          <div style="font-weight:700;margin-bottom:8px">تاریخچه سفارش‌ها</div>
-          <div class="orders-list" id="ordersList">
-            <div style="color:var(--sub)">هیچ سفارشی وجود ندارد.</div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <nav class="bottom-nav" role="navigation" aria-label="ناوبری پایین">
-    <div class="bottom-btn active" data-page="homePage">🏠<div>خانه</div></div>
-    <div class="bottom-btn" data-page="cartPage">🛒<div>سبد خرید <span id="cartBadge" style="font-size:11px;margin-right:6px;color:var(--green)"></span></div></div>
-    <div class="bottom-btn" data-page="accountPage">👤<div>حساب</div></div>
-  </nav>
-
-  <div id="addressModal" class="modal" role="dialog" aria-labelledby="addressModalTitle">
-    <div class="modal-content">
-      <h3 id="addressModalTitle">انتخاب آدرس</h3>
-      <input type="text" id="addressInput" placeholder="آدرس خود را وارد کنید (مثال: تهران، خیابان ولیعصر)" style="padding:8px;border-radius:10px;border:1px solid #e6eaee;background:#fff;width:100%;margin-bottom:12px;">
-      <div id="mapPlaceholder" style="height:200px;background:#f4f6f8;border-radius:10px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;color:var(--sub)">نقشه (شبیه‌سازی)</div>
-      <div style="display:flex;gap:8px;justify-content:center">
-        <button class="small-btn" id="confirmAddressBtn">تأیید</button>
-        <button class="small-btn cancel" id="cancelAddressBtn">لغو</button>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div id="topupModal" class="modal" role="dialog" aria-labelledby="topupModalTitle">
-    <div class="modal-content">
-      <h3 id="topupModalTitle">افزایش موجودی کیف پول</h3>
-      <input type="number" id="modalTopupValue" min="1000" placeholder="مبلغ به تومان" style="padding:8px;border-radius:10px;border:1px solid #e6eaee;background:#fff;width:100%;margin-bottom:12px;">
-      <div style="display:flex;gap:8px;justify-content:center">
-        <button class="small-btn" id="confirmTopupBtn">تأیید</button>
-        <button class="small-btn cancel" id="cancelTopupBtn">لغو</button>
+  <section class="page" id="accountPage">
+    <div class="settings-icon icon-btn" id="settingsBtn" title="تنظیمات">⚙️</div>
+    <h2 class="section-title">حساب کاربری</h2>
+    <div class="account-card">
+      <div style="display:flex;gap:12px;align-items:center">
+        <div style="width:64px;height:64px;border-radius:12px;background:var(--muted);display:flex;align-items:center;justify-content:center;font-size:28px">👤</div>
+        <div style="flex:1">
+          <div id="acctName" style="font-weight:700">نام کاربر</div>
+          <div id="acctPhone" style="color:var(--sub);margin-top:4px">۰۹۰۰۰۰۰۰۰۰</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="small-btn" id="editProfileBtn">ویرایش</button>
+          <button class="small-btn" id="logoutBtn">خروج</button>
+        </div>
+      </div>
+      <div class="wallet-section">
+        <div style="font-size:13px;color:var(--sub)">کیف پول</div>
+        <div id="walletAmount" style="font-weight:700;font-size:16px;margin:6px 0;">۰ تومان</div>
+        <div style="display:flex;gap:8px;justify-content:center">
+          <input id="topupValue" type="number" min="1000" placeholder="مبلغ (تومان)" style="padding:8px;border-radius:10px;border:1px solid #e6eaee;background:#fff" />
+          <button class="small-btn" id="topupBtn">افزایش</button>
+        </div>
+      </div>
+      <div class="account-row" style="margin-top:8px">
+        <button class="small-btn" id="toggleDarkMode">تغییر تم (روشن/تیره)</button>
+      </div>
+      <div style="margin-top:8px">
+        <div style="font-weight:700;margin-bottom:8px">تاریخچه سفارش‌ها</div>
+        <div class="orders-list" id="ordersList">
+          <div style="color:var(--sub)">هیچ سفارشی وجود ندارد.</div>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
+</main>
 
-  <div id="orderConfirmModal" class="modal" role="dialog" aria-labelledby="orderConfirmModalTitle">
-    <div class="modal-content">
-      <h3 id="orderConfirmModalTitle">تأیید سفارش</h3>
-      <div id="orderSummary" style="margin-bottom:12px;"></div>
-      <div style="margin-bottom:12px;">
-        <div style="font-size:13px;color:var(--sub)">آدرس</div>
-        <div id="orderAddress" style="font-weight:700"></div>
-      </div>
-      <div style="margin-bottom:12px;">
-        <div style="font-size:13px;color:var(--sub)">روش ارسال</div>
-        <select id="deliveryMethod" style="width:100%;padding:8px;border-radius:10px;border:1px solid #e6eaee;">
-          <option value="standard">ارسال عادی (۱-۲ روز)</option>
-          <option value="express">ارسال سریع (چند ساعته)</option>
-        </select>
-      </div>
-      <div style="margin-bottom:12px;">
-        <div style="font-size:13px;color:var(--sub)">روش پرداخت</div>
-        <select id="paymentMethod" style="width:100%;padding:8px;border-radius:10px;border:1px solid #e6eaee;">
-          <option value="wallet">پرداخت از کیف پول</option>
-          <option value="cod">پرداخت درب منزل</option>
-          <option value="online">پرداخت آنلاین</option>
-        </select>
-      </div>
-      <div style="display:flex;gap:8px;justify-content:center">
-        <button class="small-btn" id="confirmOrderBtn">تأیید و ثبت</button>
-        <button class="small-btn cancel" id="cancelOrderBtn">لغو</button>
-      </div>
+<nav class="bottom-nav" role="navigation" aria-label="ناوبری پایین">
+  <div class="bottom-btn active" data-page="homePage">🏠<div>خانه</div></div>
+  <div class="bottom-btn" data-page="cartPage">🛒<div>سبد خرید <span id="cartBadge" style="font-size:11px;margin-right:6px;color:var(--green)"></span></div></div>
+  <div class="bottom-btn" data-page="accountPage">👤<div>حساب</div></div>
+</nav>
+
+<div id="addressModal" class="modal" role="dialog" aria-labelledby="addressModalTitle">
+  <div class="modal-content">
+    <h3 id="addressModalTitle">انتخاب آدرس</h3>
+    <input type="text" id="addressInput" placeholder="آدرس خود را وارد کنید (مثال: تهران، خیابان ولیعصر)" style="padding:8px;border-radius:10px;border:1px solid #e6eaee;background:#fff;width:100%;margin-bottom:12px;">
+    <div id="mapPlaceholder" style="height:200px;background:#f4f6f8;border-radius:10px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;color:var(--sub)">نقشه (شبیه‌سازی)</div>
+    <button class="small-btn" id="confirmAddressBtn">تأیید</button>
+    <button class="small-btn" id="cancelAddressBtn" style="background:var(--muted);margin-right:8px;">لغو</button>
+  </div>
+</div>
+
+<div id="topupModal" class="modal" role="dialog" aria-labelledby="topupModalTitle">
+  <div class="modal-content">
+    <h3 id="topupModalTitle">افزایش موجودی کیف پول</h3>
+    <input type="number" id="modalTopupValue" min="1000" placeholder="مبلغ به تومان" style="padding:8px;border-radius:10px;border:1px solid #e6eaee;background:#fff;width:100%;margin-bottom:12px;">
+    <button class="small-btn" id="confirmTopupBtn">تأیید</button>
+    <button class="small-btn" id="cancelTopupBtn" style="background:var(--muted);margin-right:8px;">لغو</button>
+  </div>
+</div>
+
+<div id="settingsModal" class="modal" role="dialog" aria-labelledby="settingsModalTitle">
+  <div class="modal-content">
+    <h3 id="settingsModalTitle">تنظیمات</h3>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:12px;">
+      <button class="small-btn" id="settingsDarkMode">تغییر تم (روشن/تیره)</button>
+      <select id="settingsLanguage" style="padding:8px;border-radius:10px;border:1px solid #e6eaee;background:#fff;">
+        <option value="fa">فارسی</option>
+        <option value="en">English</option>
+      </select>
+      <button class="small-btn" id="confirmSettingsBtn">ذخیره تغییرات</button>
     </div>
+    <button class="small-btn" id="cancelSettingsBtn" style="background:var(--muted);">لغو</button>
   </div>
+</div>
 
-  <div id="onlinePaymentModal" class="modal" role="dialog" aria-labelledby="onlinePaymentModalTitle">
-    <div class="modal-content">
-      <h3 id="onlinePaymentModalTitle">پرداخت آنلاین</h3>
-      <p style="margin-bottom:12px;color:var(--sub)">لطفاً اطلاعات کارت را وارد کنید (شبیه‌سازی)</p>
-      <input type="text" id="cardNumber" placeholder="شماره کارت (16 رقم)" style="padding:8px;border-radius:10px;border:1px solid #e6eaee;background:#fff;width:100%;margin-bottom:8px;">
-      <input type="text" id="cvv2" placeholder="CVV2 (3 یا 4 رقم)" style="padding:8px;border-radius:10px;border:1px solid #e6eaee;background:#fff;width:100%;margin-bottom:8px;">
-      <input type="text" id="expiryDate" placeholder="انقضا (MM/YY)" style="padding:8px;border-radius:10px;border:1px solid #e6eaee;background:#fff;width:100%;margin-bottom:12px;">
-      <div style="display:flex;gap:8px;justify-content:center">
-        <button class="small-btn" id="confirmOnlinePaymentBtn">پرداخت</button>
-        <button class="small-btn cancel" id="cancelOnlinePaymentBtn">لغو</button>
-      </div>
-      <div class="loading" id="paymentLoading"></div>
-    </div>
-  </div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+const categories = [
+  { title: 'لبنیات', items: [
+    { name: 'شیر کم‌چرب', img: 'https://labaniyat.com/wp-content/uploads/2024/07/How-to-reduce-fat-in-milk-01.webp' },
+    { name: 'شیر پرچرب', img: 'https://via.placeholder.com/400x300?text=شیر پرچرب' },
+    { name: 'شیر کاکائو', img: 'https://via.placeholder.com/400x300?text=شیر کاکائو' },
+    { name: 'ماست موسیر', img: 'https://via.placeholder.com/400x300?text=ماست موسیر' },
+    { name: 'ماست ساده', img: 'https://via.placeholder.com/400x300?text=ماست ساده' },
+    { name: 'دوغ', img: 'https://via.placeholder.com/400x300?text=دوغ' },
+    { name: 'کره پاستوریزه', img: 'https://via.placeholder.com/400x300?text=کره پاستوریزه' },
+    { name: 'خامه صبحانه', img: 'https://via.placeholder.com/400x300?text=خامه صبحانه' },
+    { name: 'پنیر سفید ایرانی', img: 'https://via.placeholder.com/400x300?text=پنیر سفید ایرانی' },
+    { name: 'پنیر خامه‌ای', img: 'https://via.placeholder.com/400x300?text=پنیر خامه‌ای' },
+    { name: 'پنیر پیتزا', img: 'https://via.placeholder.com/400x300?text=پنیر پیتزا' },
+    { name: 'کشک', img: 'https://via.placeholder.com/400x300?text=کشک' },
+    { name: 'ماست چکیده', img: 'https://via.placeholder.com/400x300?text=ماست چکیده' },
+    { name: 'ماست پروبیوتیک', img: 'https://via.placeholder.com/400x300?text=ماست پروبیوتیک' },
+    { name: 'دوغ گازدار', img: 'https://via.placeholder.com/400x300?text=دوغ گازدار' },
+    { name: 'دوغ بدون گاز', img: 'https://via.placeholder.com/400x300?text=دوغ بدون گاز' }
+  ] },
+  { title: 'خوار و بار', items: [
+    { name: 'برنج طارم', img: 'https://bagheiran.com/wp-content/uploads/2023/07/%D8%A8%D8%B1%D9%86%D8%AC-%D8%B7%D8%A7%D8%B1%D9%85-%D9%87%D8%A7%D8%B4%D9%85%DB%8C_BagheIRAN.com_.jpg' },
+    { name: 'برنج هاشمی', img: 'https://via.placeholder.com/400x300?text=برنج هاشمی' },
+    { name: 'عدس', img: 'https://via.placeholder.com/400x300?text=عدس' },
+    { name: 'لوبیا چیتی', img: 'https://via.placeholder.com/400x300?text=لوبیا چیتی' },
+    { name: 'لوبیا قرمز', img: 'https://via.placeholder.com/400x300?text=لوبیا قرمز' },
+    { name: 'نخود', img: 'https://via.placeholder.com/400x300?text=نخود' },
+    { name: 'لپه', img: 'https://via.placeholder.com/400x300?text=لپه' },
+    { name: 'ماش', img: 'https://via.placeholder.com/400x300?text=ماش' },
+    { name: 'رب گوجه فرنگی', img: 'https://via.placeholder.com/400x300?text=رب گوجه فرنگی' },
+    { name: 'روغن مایع', img: 'https://via.placeholder.com/400x300?text=روغن مایع' },
+    { name: 'روغن سرخ‌کردنی', img: 'https://via.placeholder.com/400x300?text=روغن سرخ‌کردنی' },
+    { name: 'روغن زیتون', img: 'https://via.placeholder.com/400x300?text=روغن زیتون' },
+    { name: 'نمک', img: 'https://via.placeholder.com/400x300?text=نمک' },
+    { name: 'شکر', img: 'https://via.placeholder.com/400x300?text=شکر' },
+    { name: 'آرد', img: 'https://via.placeholder.com/400x300?text=آرد' },
+    { name: 'زعفران', img: 'https://via.placeholder.com/400x300?text=زعفران' },
+    { name: 'ادویه کاری', img: 'https://via.placeholder.com/400x300?text=ادویه کاری' },
+    { name: 'فلفل سیاه', img: 'https://via.placeholder.com/400x300?text=فلفل سیاه' },
+    { name: 'زردچوبه', img: 'https://via.placeholder.com/400x300?text=زردچوبه' },
+    { name: 'سماق', img: 'https://via.placeholder.com/400x300?text=سماق' },
+    { name: 'زرشک', img: 'https://via.placeholder.com/400x300?text=زرشک' },
+    { name: 'ترخینه', img: 'https://via.placeholder.com/400x300?text=ترخینه' },
+    { name: 'پودر سوخاری', img: 'https://via.placeholder.com/400x300?text=پودر سوخاری' }
+  ] },
+  { title: 'کنسرو و غذای آماده', items: [
+    { name: 'کنسرو لوبیا', img: 'https://cdn3.goldtag.net/web/uploads/pictures/558x405/1315560490_1700119598_1.jpg' },
+    { name: 'کنسرو ماهی تن', img: 'https://via.placeholder.com/400x300?text=کنسرو ماهی تن' },
+    { name: 'کنسرو ذرت', img: 'https://via.placeholder.com/400x300?text=کنسرو ذرت' },
+    { name: 'کنسرو نخودفرنگی', img: 'https://via.placeholder.com/400x300?text=کنسرو نخودفرنگی' },
+    { name: 'کنسرو بادمجان', img: 'https://via.placeholder.com/400x300?text=کنسرو بادمجان' },
+    { name: 'کنسرو عدسی', img: 'https://via.placeholder.com/400x300?text=کنسرو عدسی' },
+    { name: 'خوراک لوبیا چیتی', img: 'https://via.placeholder.com/400x300?text=خوراک لوبیا چیتی' },
+    { name: 'خورشت قیمه آماده', img: 'https://via.placeholder.com/400x300?text=خورشت قیمه آماده' },
+    { name: 'خورشت قورمه‌سبزی آماده', img: 'https://via.placeholder.com/400x300?text=خورشت قورمه‌سبزی آماده' },
+    { name: 'کنسرو لوبیا با قارچ', img: 'https://via.placeholder.com/400x300?text=کنسرو لوبیا با قارچ' },
+    { name: 'غذای نیمه‌آماده ماکارونی', img: 'https://via.placeholder.com/400x300?text=غذای نیمه‌آماده ماکارونی' },
+    { name: 'پوره سیب‌زمینی آماده', img: 'https://via.placeholder.com/400x300?text=پوره سیب‌زمینی آماده' }
+  ] },
+  { title: 'تنقلات و اسنک', items: [
+    { name: 'چیپس نمکی', img: 'https://www.takpakhsh.co/uploads/ProductsPhotos/30972457/221330_2000.jpg' },
+    { name: 'چیپس فلفلی', img: 'https://via.placeholder.com/400x300?text=چیپس فلفلی' },
+    { name: 'پفک', img: 'https://via.placeholder.com/400x300?text=پفک' },
+    { name: 'پاپ‌کورن', img: 'https://via.placeholder.com/400x300?text=پاپ‌کورن' },
+    { name: 'بیسکویت ساقه طلایی', img: 'https://via.placeholder.com/400x300?text=بیسکویت ساقه طلایی' },
+    { name: 'ویفر شکلاتی', img: 'https://via.placeholder.com/400x300?text=ویفر شکلاتی' },
+    { name: 'شکلات تخته‌ای', img: 'https://via.placeholder.com/400x300?text=شکلات تخته‌ای' },
+    { name: 'شکلات مغزدار', img: 'https://via.placeholder.com/400x300?text=شکلات مغزدار' },
+    { name: 'شکلات تلخ', img: 'https://via.placeholder.com/400x300?text=شکلات تلخ' },
+    { name: 'آدامس', img: 'https://via.placeholder.com/400x300?text=آدامس' },
+    { name: 'تافی', img: 'https://via.placeholder.com/400x300?text=تافی' },
+    { name: 'آبنبات', img: 'https://via.placeholder.com/400x300?text=آبنبات' },
+    { name: 'بستنی', img: 'https://via.placeholder.com/400x300?text=بستنی' },
+    { name: 'پاستیل', img: 'https://via.placeholder.com/400x300?text=پاستیل' },
+    { name: 'بیسکویت کرم‌دار', img: 'https://via.placeholder.com/400x300?text=بیسکویت کرم‌دار' },
+    { name: 'چیپس سرکه‌ای', img: 'https://via.placeholder.com/400x300?text=چیپس سرکه‌ای' },
+    { name: 'چیپس خلالی', img: 'https://via.placeholder.com/400x300?text=چیپس خلالی' }
+  ] },
+  { title: 'نوشیدنی‌ها', items: [
+    { name: 'نوشابه کوکاکولا', img: 'https://www.jowhareh.com/images/Jowhareh/galleries/large_1b1c8adc-5740-436b-8c03-0abe2895ab2c.webp' },
+    { name: 'نوشابه پپسی', img: 'https://via.placeholder.com/400x300?text=نوشابه پپسی' },
+    { name: 'نوشابه فانتا', img: 'https://via.placeholder.com/400x300?text=نوشابه فانتا' },
+    { name: 'آب معدنی', img: 'https://via.placeholder.com/400x300?text=آب معدنی' },
+    { name: 'آب گازدار', img: 'https://via.placeholder.com/400x300?text=آب گازدار' },
+    { name: 'دلستر', img: 'https://via.placeholder.com/400x300?text=دلستر' },
+    { name: 'دوغ', img: 'https://via.placeholder.com/400x300?text=دوغ' },
+    { name: 'آبمیوه پرتقال', img: 'https://via.placeholder.com/400x300?text=آبمیوه پرتقال' },
+    { name: 'آبمیوه سیب', img: 'https://via.placeholder.com/400x300?text=آبمیوه سیب' },
+    { name: 'آبمیوه آناناس', img: 'https://via.placeholder.com/400x300?text=آبمیوه آناناس' },
+    { name: 'چای کیسه‌ای', img: 'https://via.placeholder.com/400x300?text=چای کیسه‌ای' },
+    { name: 'چای سیاه', img: 'https://via.placeholder.com/400x300?text=چای سیاه' },
+    { name: 'قهوه فوری', img: 'https://via.placeholder.com/400x300?text=قهوه فوری' },
+    { name: 'نسکافه', img: 'https://via.placeholder.com/400x300?text=نسکافه' },
+    { name: 'پودر کاکائو', img: 'https://via.placeholder.com/400x300?text=پودر کاکائو' },
+    { name: 'شربت لیمو', img: 'https://via.placeholder.com/400x300?text=شربت لیمو' },
+    { name: 'شربت آلبالو', img: 'https://via.placeholder.com/400x300?text=شربت آلبالو' }
+  ] },
+  { title: 'صبحانه', items: [
+    { name: 'نان تست', img: 'https://via.placeholder.com/400x300?text=نان تست' },
+    { name: 'نان لواش', img: 'https://via.placeholder.com/400x300?text=نان لواش' },
+    { name: 'مربای توت‌فرنگی', img: 'https://via.placeholder.com/400x300?text=مربای توت‌فرنگی' },
+    { name: 'مربای هویج', img: 'https://via.placeholder.com/400x300?text=مربای هویج' },
+    { name: 'عسل طبیعی', img: 'https://via.placeholder.com/400x300?text=عسل طبیعی' },
+    { name: 'کره بادام‌زمینی', img: 'https://via.placeholder.com/400x300?text=کره بادام‌زمینی' },
+    { name: 'کره حیوانی', img: 'https://via.placeholder.com/400x300?text=کره حیوانی' },
+    { name: 'شکلات صبحانه', img: 'https://via.placeholder.com/400x300?text=شکلات صبحانه' },
+    { name: 'پنیر خامه‌ای', img: 'https://via.placeholder.com/400x300?text=پنیر خامه‌ای' },
+    { name: 'تخم‌مرغ', img: 'https://via.placeholder.com/400x300?text=تخم‌مرغ' },
+    { name: 'چای صبحانه', img: 'https://via.placeholder.com/400x300?text=چای صبحانه' },
+    { name: 'قهوه فوری', img: 'https://via.placeholder.com/400x300?text=قهوه فوری' },
+    { name: 'شیر کاکائو', img: 'https://via.placeholder.com/400x300?text=شیر کاکائو' }
+  ] },
+  { title: 'پروتئینی', items: [
+    { name: 'سوسیس مرغ', img: 'https://via.placeholder.com/400x300?text=سوسیس مرغ' },
+    { name: 'سوسیس گوشت', img: 'https://via.placeholder.com/400x300?text=سوسیس گوشت' },
+    { name: 'کالباس', img: 'https://via.placeholder.com/400x300?text=کالباس' },
+    { name: 'ژامبون', img: 'https://via.placeholder.com/400x300?text=ژامبون' },
+    { name: 'همبرگر', img: 'https://via.placeholder.com/400x300?text=همبرگر' },
+    { name: 'مرغ تازه', img: 'https://via.placeholder.com/400x300?text=مرغ تازه' },
+    { name: 'ران مرغ', img: 'https://via.placeholder.com/400x300?text=ران مرغ' },
+    { name: 'فیله مرغ', img: 'https://via.placeholder.com/400x300?text=فیله مرغ' },
+    { name: 'گوشت گوساله', img: 'https://via.placeholder.com/400x300?text=گوشت گوساله' },
+    { name: 'گوشت گوسفند', img: 'https://via.placeholder.com/400x300?text=گوشت گوسفند' },
+    { name: 'ماهی قزل‌آلا', img: 'https://via.placeholder.com/400x300?text=ماهی قزل‌آلا' },
+    { name: 'ماهی تن تازه', img: 'https://via.placeholder.com/400x300?text=ماهی تن تازه' },
+    { name: 'میگو', img: 'https://via.placeholder.com/400x300?text=میگو' },
+    { name: 'تخم‌مرغ', img: 'https://via.placeholder.com/400x300?text=تخم‌مرغ' },
+    { name: 'جگر مرغ', img: 'https://via.placeholder.com/400x300?text=جگر مرغ' },
+    { name: 'دل و قلوه', img: 'https://via.placeholder.com/400x300?text=دل و قلوه' },
+    { name: 'ناگت مرغ', img: 'https://via.placeholder.com/400x300?text=ناگت مرغ' },
+    { name: 'فیله ماهی', img: 'https://via.placeholder.com/400x300?text=فیله ماهی' }
+  ] },
+  { title: 'غذای منجمد', items: [
+    { name: 'پیتزا آماده', img: 'https://via.placeholder.com/400x300?text=پیتزا آماده' },
+    { name: 'سمبوسه', img: 'https://via.placeholder.com/400x300?text=سمبوسه' },
+    { name: 'فلافل', img: 'https://via.placeholder.com/400x300?text=فلافل' },
+    { name: 'سیب‌زمینی سرخ‌کرده', img: 'https://via.placeholder.com/400x300?text=سیب‌زمینی سرخ‌کرده' },
+    { name: 'کتلت', img: 'https://via.placeholder.com/400x300?text=کتلت' },
+    { name: 'شنیسل مرغ', img: 'https://via.placeholder.com/400x300?text=شنیسل مرغ' },
+    { name: 'ناگت', img: 'https://via.placeholder.com/400x300?text=ناگت' },
+    { name: 'سبزی قورمه', img: 'https://via.placeholder.com/400x300?text=سبزی قورمه' },
+    { name: 'سبزی کوکو', img: 'https://via.placeholder.com/400x300?text=سبزی کوکو' },
+    { name: 'سبزی آش', img: 'https://via.placeholder.com/400x300?text=سبزی آش' },
+    { name: 'سبزی پلو', img: 'https://via.placeholder.com/400x300?text=سبزی پلو' }
+  ] },
+  { title: 'بهداشتی و شوینده', items: [
+    { name: 'شامپو بدن', img: 'https://via.placeholder.com/400x300?text=شامپو بدن' },
+    { name: 'شامپو مو', img: 'https://via.placeholder.com/400x300?text=شامپو مو' },
+    { name: 'نرم‌کننده مو', img: 'https://via.placeholder.com/400x300?text=نرم‌کننده مو' },
+    { name: 'صابون', img: 'https://via.placeholder.com/400x300?text=صابون' },
+    { name: 'مایع دستشویی', img: 'https://via.placeholder.com/400x300?text=مایع دستشویی' },
+    { name: 'مایع ظرفشویی', img: 'https://via.placeholder.com/400x300?text=مایع ظرفشویی' },
+    { name: 'پودر لباسشویی', img: 'https://via.placeholder.com/400x300?text=پودر لباسشویی' },
+    { name: 'سفیدکننده', img: 'https://via.placeholder.com/400x300?text=سفیدکننده' },
+    { name: 'ضدعفونی‌کننده', img: 'https://via.placeholder.com/400x300?text=ضدعفونی‌کننده' },
+    { name: 'دستمال کاغذی', img: 'https://via.placeholder.com/400x300?text=دستمال کاغذی' },
+    { name: 'دستمال توالت', img: 'https://via.placeholder.com/400x300?text=دستمال توالت' },
+    { name: 'پوشک بزرگسال', img: 'https://via.placeholder.com/400x300?text=پوشک بزرگسال' },
+    { name: 'شیشه پاک‌کن', img: 'https://via.placeholder.com/400x300?text=شیشه پاک‌کن' },
+    { name: 'اسپری خوشبوکننده', img: 'https://via.placeholder.com/400x300?text=اسپری خوشبوکننده' },
+    { name: 'خمیر دندان', img: 'https://via.placeholder.com/400x300?text=خمیر دندان' },
+    { name: 'مسواک', img: 'https://via.placeholder.com/400x300?text=مسواک' },
+    { name: 'نخ دندان', img: 'https://via.placeholder.com/400x300?text=نخ دندان' },
+    { name: 'کرم مرطوب‌کننده', img: 'https://via.placeholder.com/400x300?text=کرم مرطوب‌کننده' },
+    { name: 'لوسیون بدن', img: 'https://via.placeholder.com/400x300?text=لوسیون بدن' },
+    { name: 'افترشیو', img: 'https://via.placeholder.com/400x300?text=افترشیو' }
+  ] },
+  { title: 'کودک و نوزاد', items: [
+    { name: 'پوشک مولفیکس', img: 'https://via.placeholder.com/400x300?text=پوشک مولفیکس' },
+    { name: 'دستمال مرطوب', img: 'https://via.placeholder.com/400x300?text=دستمال مرطوب' },
+    { name: 'شیر خشک', img: 'https://via.placeholder.com/400x300?text=شیر خشک' },
+    { name: 'شیشه شیر', img: 'https://via.placeholder.com/400x300?text=شیشه شیر' },
+    { name: 'پستانک', img: 'https://via.placeholder.com/400x300?text=پستانک' },
+    { name: 'کرم کودک', img: 'https://via.placeholder.com/400x300?text=کرم کودک' },
+    { name: 'شامپو بچه', img: 'https://via.placeholder.com/400x300?text=شامپو بچه' },
+    { name: 'پودر بچه', img: 'https://via.placeholder.com/400x300?text=پودر بچه' },
+    { name: 'غذای کمکی نوزاد', img: 'https://via.placeholder.com/400x300?text=غذای کمکی نوزاد' },
+    { name: 'دستمال حوله‌ای کودک', img: 'https://via.placeholder.com/400x300?text=دستمال حوله‌ای کودک' }
+  ] },
+  { title: 'دستمال و شوینده خانگی', items: [
+    { name: 'دستمال آشپزخانه', img: 'https://via.placeholder.com/400x300?text=دستمال آشپزخانه' },
+    { name: 'اسکاچ', img: 'https://via.placeholder.com/400x300?text=اسکاچ' },
+    { name: 'سیم ظرفشویی', img: 'https://via.placeholder.com/400x300?text=سیم ظرفشویی' },
+    { name: 'ابر تمیزکننده', img: 'https://via.placeholder.com/400x300?text=ابر تمیزکننده' },
+    { name: 'جرم‌گیر', img: 'https://via.placeholder.com/400x300?text=جرم‌گیر' },
+    { name: 'شیشه پاک‌کن', img: 'https://via.placeholder.com/400x300?text=شیشه پاک‌کن' },
+    { name: 'اسپری ضدعفونی‌کننده', img: 'https://via.placeholder.com/400x300?text=اسپری ضدعفونی‌کننده' },
+    { name: 'مایع کف‌شوی', img: 'https://via.placeholder.com/400x300?text=مایع کف‌شوی' },
+    { name: 'سفیدکننده سطوح', img: 'https://via.placeholder.com/400x300?text=سفیدکننده سطوح' },
+    { name: 'اسپری خوشبوکننده محیط', img: 'https://via.placeholder.com/400x300?text=اسپری خوشبوکننده محیط' },
+    { name: 'مایع دستشویی فومی', img: 'https://via.placeholder.com/400x300?text=مایع دستشویی فومی' }
+  ] }
+];
 
-  <script>
-    const LS_CART = 'kalino_cart_v3';
-    const LS_USER = 'kalino_user_v3';
-    const LS_ORDERS = 'kalino_orders_v3';
-    const LS_DARK_MODE = 'kalino_dark_mode';
-    let cart = JSON.parse(localStorage.getItem(LS_CART) || '[]');
-    let user = JSON.parse(localStorage.getItem(LS_USER) || '{}');
-    let orders = JSON.parse(localStorage.getItem(LS_ORDERS) || '[]');
-    let darkMode = JSON.parse(localStorage.getItem(LS_DARK_MODE) || 'false');
-    user.address = user.address || '';
-    user.language = user.language || 'fa';
-    user.wallet = user.wallet || 100000; // مقدار اولیه کیف پول
+const LS_CART = 'kalino_cart_v3'; const LS_USER = 'kalino_user_v3'; const LS_ORDERS = 'kalino_orders_v3'; const LS_DARK_MODE = 'kalino_dark_mode';
+let cart = JSON.parse(localStorage.getItem(LS_CART) || '[]');
+let user = JSON.parse(localStorage.getItem(LS_USER) || '{}');
+let orders = JSON.parse(localStorage.getItem(LS_ORDERS) || '[]');
+let darkMode = JSON.parse(localStorage.getItem(LS_DARK_MODE) || 'false');
+user.address = user.address || '';
+user.language = user.language || 'fa';
+saveUser();
+
+function formatToman(n) { return n.toLocaleString('fa-IR') + ' تومان'; }
+function toast(msg, time = 1800) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._hide); t._hide = setTimeout(() => t.classList.remove('show'), time); }
+function saveCart() { localStorage.setItem(LS_CART, JSON.stringify(cart)); }
+function saveUser() { localStorage.setItem(LS_USER, JSON.stringify(user)); }
+function saveOrders() { localStorage.setItem(LS_ORDERS, JSON.stringify(orders)); }
+
+// اعمال حالت دارک مود
+if (darkMode) { document.body.classList.add('dark-mode'); }
+
+// تغییر تم
+function toggleDarkMode() {
+  darkMode = !darkMode;
+  document.body.classList.toggle('dark-mode');
+  localStorage.setItem(LS_DARK_MODE, JSON.stringify(darkMode));
+  toast(darkMode ? 'تم تیره فعال شد' : 'تم روشن فعال شد');
+}
+
+// رندر آدرس
+function renderAddress() {
+  const addressLabel = document.getElementById('addressLabel');
+  addressLabel.textContent = user.address ? `📍 ${user.address}` : '📍 آدرس';
+  addressLabel.parentElement.classList.toggle('bold', !!user.address);
+}
+renderAddress();
+
+// رندر دسته‌بندی‌ها
+const categoriesList = document.getElementById('categoriesList');
+categories.forEach(c => {
+  const d = document.createElement('div');
+  d.className = 'cat-card'; d.tabIndex = 0;
+  d.innerHTML = `<div class="emoji">🛒</div><div style="font-weight:600">${c.title}</div>`;
+  categoriesList.appendChild(d);
+  d.addEventListener('click', () => showCategory(c));
+});
+
+// نمایش دسته‌بندی
+const categoryPage = document.getElementById('categoryPage');
+const categoryTitle = document.getElementById('categoryTitle');
+const categoryProducts = document.getElementById('categoryProducts');
+function showCategory(cat, highlightItem = null) {
+  showPage('categoryPage'); categoryTitle.textContent = cat.title;
+  categoryProducts.innerHTML = '';
+  cat.items.forEach((item, idx) => {
+    const p = typeof item === 'object' ? item : { name: item, img: 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(item) };
+    const price = Math.floor(Math.random() * 40000 + 5000);
+    const card = document.createElement('div'); card.className = 'prod-card';
+    if (highlightItem && p.name.includes(highlightItem)) card.classList.add('highlight');
+    card.innerHTML = `<img src="${p.img}" alt="${p.name}"><div class="title">${p.name}</div><div class="price">${formatToman(price)}</div>
+      <div class="actions"><button class="btn-outline" data-action="details" data-id="${cat.title + '_' + idx}">جزئیات</button>
+      <button class="btn-primary" data-action="add" data-id="${cat.title + '_' + idx}">افزودن</button></div>`;
+    categoryProducts.appendChild(card);
+    card.querySelector('[data-action="add"]').addEventListener('click', () => { addToCart({ ...p, id: cat.title + '_' + idx, price }); });
+    card.querySelector('[data-action="details"]').addEventListener('click', () => toast(`${p.name} — ${formatToman(price)}`));
+  });
+}
+
+// محصولات تخفیفی
+function getDiscountedProducts() {
+  const allItems = [];
+  categories.forEach(cat => {
+    cat.items.forEach((item, idx) => {
+      const name = typeof item === 'object' ? item.name : item;
+      const img = typeof item === 'object' ? item.img : 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(name);
+      allItems.push({
+        id: `${cat.title}_${idx}`,
+        name,
+        price: Math.floor(Math.random() * 40000 + 5000),
+        discountPrice: Math.floor(Math.random() * 30000 + 3000),
+        img
+      });
+    });
+  });
+  // حذف تکراری‌ها و انتخاب تصادفی
+  const uniqueItems = Array.from(new Set(allItems.map(item => item.id)))
+    .map(id => allItems.find(item => item.id === id))
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 5);
+  return uniqueItems;
+}
+
+function renderDiscountItems() {
+  const discountItems = document.getElementById('discountItems');
+  discountItems.innerHTML = '';
+  const discountedProducts = getDiscountedProducts();
+  discountedProducts.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'prod-card';
+    card.innerHTML = `
+      <img src="${p.img}" alt="${p.name}">
+      <div class="title">${p.name}</div>
+      <div class="price" style="text-decoration:line-through;color:var(--sub)">${formatToman(p.price)}</div>
+      <div class="price" style="color:var(--accent)">${formatToman(p.discountPrice)}</div>
+      <div class="actions">
+        <button class="btn-outline" data-action="details" data-id="${p.id}">جزئیات</button>
+        <button class="btn-primary" data-action="add" data-id="${p.id}">افزودن</button>
+      </div>`;
+    discountItems.appendChild(card);
+    card.querySelector('[data-action="add"]').addEventListener('click', () => {
+      addToCart({ ...p, price: p.discountPrice });
+    });
+    card.querySelector('[data-action="details"]').addEventListener('click', () => {
+      toast(`${p.name} — ${formatToman(p.discountPrice)} (تخفیف)`);
+    });
+  });
+}
+
+function startDiscountTimer() {
+  const timerEl = document.getElementById('discountTimer');
+  function updateTimer() {
+    const now = new Date();
+    const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    const diff = endOfDay - now;
+    if (diff <= 0) {
+      timerEl.textContent = 'تخفیفات پایان یافت';
+      return;
+    }
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    timerEl.textContent = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+  updateTimer();
+  setInterval(updateTimer, 1000);
+}
+
+// مدیریت سبد خرید
+const cartItemsContainer = document.getElementById('cartItems');
+const cartTotalSpan = document.getElementById('cartTotal');
+const cartFooter = document.getElementById('cartFooter');
+const cartBadge = document.getElementById('cartBadge');
+function calcCartTotals() {
+  let total = 0, count = 0;
+  for (const it of cart) {
+    const line = Number(it.price) * Number(it.quantity);
+    total += line;
+    count += Number(it.quantity);
+  }
+  return { total, count };
+}
+function updateCartUI() {
+  cartItemsContainer.innerHTML = '';
+  if (cart.length === 0) {
+    cartItemsContainer.innerHTML = `<div style="color:var(--sub)">سبد خرید خالی است.</div>`;
+    cartFooter.style.display = 'none';
+    cartBadge.textContent = '';
+    return;
+  }
+  cartFooter.style.display = 'flex';
+  const { total, count } = calcCartTotals();
+  cartTotalSpan.textContent = formatToman(total);
+  cartBadge.textContent = count > 0 ? `(${count})` : '';
+  cart.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `<img src="${item.img}" alt="${item.name}"><div class="cart-item-info"><div class="cart-item-title">${item.name}</div>
+    <div class="cart-item-price">${formatToman(item.price)} × ${item.quantity} = ${formatToman(item.price * item.quantity)}</div>
+    <div class="qty-controls" data-idx="${idx}">
+      <button data-op="minus" title="کم کردن">−</button>
+      <div style="min-width:36px;text-align:center;font-weight:700">${item.quantity}</div>
+      <button data-op="plus" title="افزایش">+</button>
+      <button style="margin-left:8px" class="remove-btn" data-op="remove" title="حذف">حذف</button>
+    </div></div>`;
+    cartItemsContainer.appendChild(div);
+  });
+  saveCart();
+}
+cartItemsContainer.addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  const parent = e.target.closest('.qty-controls');
+  if (!parent) return;
+  const idx = Number(parent.dataset.idx);
+  const op = btn.dataset.op;
+  if (isNaN(idx) || !cart[idx]) return;
+  if (op === 'plus') {
+    cart[idx].quantity = Number(cart[idx].quantity) + 1;
+    toast('تعداد افزایش یافت');
+  } else if (op === 'minus') {
+    cart[idx].quantity = Number(cart[idx].quantity) - 1;
+    if (cart[idx].quantity <= 0) {
+      cart.splice(idx, 1);
+      toast('محصول از سبد حذف شد');
+    } else {
+      toast('تعداد کاهش یافت');
+    }
+  } else if (op === 'remove') {
+    cart.splice(idx, 1);
+    toast('محصول حذف شد');
+  }
+  updateCartUI();
+});
+function addToCart(product) {
+  const existing = cart.find(it => it.id === product.id);
+  if (existing) {
+    existing.quantity = Number(existing.quantity) + 1;
+  } else {
+    cart.push({ ...product, quantity: 1 });
+  }
+  toast(`"${product.name}" به سبد اضافه شد`);
+  updateCartUI();
+}
+
+// جستجو با debounce و جستجوی محصولات
+const searchInput = document.getElementById('searchInput');
+const clearSearch = document.getElementById('clearSearch');
+let searchTimeout;
+searchInput.addEventListener('input', () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => { applySearch(); }, 300);
+});
+clearSearch.addEventListener('click', () => {
+  searchInput.value = '';
+  toast('نمایش همهٔ دسته‌بندی‌ها');
+  showPage('homePage');
+});
+function applySearch() {
+  const q = searchInput.value.trim();
+  if (!q) {
+    toast('نمایش همهٔ دسته‌بندی‌ها');
+    showPage('homePage');
+    return;
+  }
+  let found = false;
+  categories.forEach(cat => {
+    const matchingItems = cat.items.filter(item => (typeof item === 'object' ? item.name : item).includes(q));
+    if (matchingItems.length > 0) {
+      showCategory(cat, q);
+      found = true;
+    }
+  });
+  if (found) {
+    toast('محصولات پیدا شد');
+  } else {
+    toast('هیچ محصولی پیدا نشد');
+    showPage('homePage');
+  }
+}
+
+// صفحه حساب کاربری
+const acctName = document.getElementById('acctName');
+const acctPhone = document.getElementById('acctPhone');
+const walletAmount = document.getElementById('walletAmount');
+const ordersList = document.getElementById('ordersList');
+const editProfileBtn = document.getElementById('editProfileBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const topupBtn = document.getElementById('topupBtn');
+if (!user.name) user = { name: 'کاربر مهمان', phone: '۰۹۰۰۰۰۰۰۰۰', wallet: 0, address: '', language: 'fa' };
+saveUser();
+function renderAccount() {
+  acctName.textContent = user.name || 'نام کاربر';
+  acctPhone.textContent = user.phone || '۰۹۰۰۰۰۰۰۰۰';
+  walletAmount.textContent = formatToman(Number(user.wallet || 0));
+}
+function renderOrders() {
+  ordersList.innerHTML = '';
+  if (orders.length === 0) {
+    ordersList.innerHTML = '<div style="color:var(--sub)">هیچ سفارشی وجود ندارد.</div>';
+    return;
+  }
+  orders.forEach(o => {
+    const d = document.createElement('div');
+    d.className = 'order-item';
+    const date = new Date(o.createdAt);
+    const itemsSummary = o.items.map(it => `${it.name} × ${it.quantity}`).join('، ');
+    d.innerHTML = `<div style="font-weight:700">#${o.id.split('_')[1]}</div><div style="color:var(--sub);font-size:13px;margin-top:6px">${itemsSummary}</div><div style="display:flex;justify-content:space-between;margin-top:8px"><div style="font-weight:700">${formatToman(o.total)}</div><div style="color:var(--sub);font-size:13px">${date.toLocaleString('fa-IR')}</div></div>`;
+    ordersList.appendChild(d);
+  });
+}
+renderAccount();
+renderOrders();
+editProfileBtn.addEventListener('click', () => {
+  const newName = prompt('نام و نام خانوادگی را وارد کنید:', user.name || '');
+  if (newName === null) return;
+  const newPhone = prompt('شماره تلفن را وارد کنید:', user.phone || '');
+  if (newPhone === null) return;
+  user.name = newName.trim() || user.name;
+  user.phone = newPhone.trim() || user.phone;
+  saveUser();
+  renderAccount();
+  toast('اطلاعات بروزرسانی شد');
+});
+logoutBtn.addEventListener('click', () => {
+  if (confirm('آیا می‌خواهید خارج شوید؟')) {
+    user = {};
     saveUser();
-
-    const categories = [
-      { title: 'لبنیات', items: [
-        { name: 'شیر کم‌چرب', img: 'https://labaniyat.com/wp-content/uploads/2024/07/How-to-reduce-fat-in-milk-01.webp' },
-        { name: 'شیر پرچرب', img: 'https://via.placeholder.com/400x300?text=شیر پرچرب' },
-        { name: 'شیر کاکائو', img: 'https://via.placeholder.com/400x300?text=شیر کاکائو' },
-        { name: 'ماست موسیر', img: 'https://via.placeholder.com/400x300?text=ماست موسیر' },
-        { name: 'ماست ساده', img: 'https://via.placeholder.com/400x300?text=ماست ساده' },
-        { name: 'دوغ', img: 'https://via.placeholder.com/400x300?text=دوغ' },
-        { name: 'کره پاستوریزه', img: 'https://via.placeholder.com/400x300?text=کره پاستوریزه' },
-        { name: 'خامه صبحانه', img: 'https://via.placeholder.com/400x300?text=خامه صبحانه' },
-        { name: 'پنیر سفید ایرانی', img: 'https://via.placeholder.com/400x300?text=پنیر سفید ایرانی' },
-        { name: 'پنیر خامه‌ای', img: 'https://via.placeholder.com/400x300?text=پنیر خامه‌ای' },
-        { name: 'پنیر پیتزا', img: 'https://via.placeholder.com/400x300?text=پنیر پیتزا' },
-        { name: 'کشک', img: 'https://via.placeholder.com/400x300?text=کشک' },
-        { name: 'ماست چکیده', img: 'https://via.placeholder.com/400x300?text=ماست چکیده' },
-        { name: 'ماست پروبیوتیک', img: 'https://via.placeholder.com/400x300?text=ماست پروبیوتیک' },
-        { name: 'دوغ گازدار', img: 'https://via.placeholder.com/400x300?text=دوغ گازدار' },
-        { name: 'دوغ بدون گاز', img: 'https://via.placeholder.com/400x300?text=دوغ بدون گاز' }
-      ] },
-      { title: 'خوار و بار', items: [
-        { name: 'برنج طارم', img: 'https://bagheiran.com/wp-content/uploads/2023/07/%D8%A8%D8%B1%D9%86%D8%AC-%D8%B7%D8%A7%D8%B1%D9%85-%D9%87%D8%A7%D8%B4%D9%85%DB%8C_BagheIRAN.com_.jpg' },
-        { name: 'برنج هاشمی', img: 'https://via.placeholder.com/400x300?text=برنج هاشمی' },
-        { name: 'عدس', img: 'https://via.placeholder.com/400x300?text=عدس' },
-        { name: 'لوبیا چیتی', img: 'https://via.placeholder.com/400x300?text=لوبیا چیتی' },
-        { name: 'لوبیا قرمز', img: 'https://via.placeholder.com/400x300?text=لوبیا قرمز' },
-        { name: 'نخود', img: 'https://via.placeholder.com/400x300?text=نخود' },
-        { name: 'لپه', img: 'https://via.placeholder.com/400x300?text=لپه' },
-        { name: 'ماش', img: 'https://via.placeholder.com/400x300?text=ماش' },
-        { name: 'رب گوجه فرنگی', img: 'https://via.placeholder.com/400x300?text=رب گوجه فرنگی' },
-        { name: 'روغن مایع', img: 'https://via.placeholder.com/400x300?text=روغن مایع' },
-        { name: 'روغن سرخ‌کردنی', img: 'https://via.placeholder.com/400x300?text=روغن سرخ‌کردنی' },
-        { name: 'روغن زیتون', img: 'https://via.placeholder.com/400x300?text=روغن زیتون' },
-        { name: 'نمک', img: 'https://via.placeholder.com/400x300?text=نمک' },
-        { name: 'شکر', img: 'https://via.placeholder.com/400x300?text=شکر' },
-        { name: 'آرد', img: 'https://via.placeholder.com/400x300?text=آرد' },
-        { name: 'زعفران', img: 'https://via.placeholder.com/400x300?text=زعفران' },
-        { name: 'ادویه کاری', img: 'https://via.placeholder.com/400x300?text=ادویه کاری' },
-        { name: 'فلفل سیاه', img: 'https://via.placeholder.com/400x300?text=فلفل سیاه' },
-        { name: 'زردچوبه', img: 'https://via.placeholder.com/400x300?text=زردچوبه' },
-        { name: 'سماق', img: 'https://via.placeholder.com/400x300?text=سماق' },
-        { name: 'زرشک', img: 'https://via.placeholder.com/400x300?text=زرشک' },
-        { name: 'ترخینه', img: 'https://via.placeholder.com/400x300?text=ترخینه' },
-        { name: 'پودر سوخاری', img: 'https://via.placeholder.com/400x300?text=پودر سوخاری' }
-      ] },
-      { title: 'کنسرو و غذای آماده', items: [
-        { name: 'کنسرو لوبیا', img: 'https://cdn3.goldtag.net/web/uploads/pictures/558x405/1315560490_1700119598_1.jpg' },
-        { name: 'کنسرو ماهی تن', img: 'https://via.placeholder.com/400x300?text=کنسرو ماهی تن' },
-        { name: 'کنسرو ذرت', img: 'https://via.placeholder.com/400x300?text=کنسرو ذرت' },
-        { name: 'کنسرو نخودفرنگی', img: 'https://via.placeholder.com/400x300?text=کنسرو نخودفرنگی' },
-        { name: 'کنسرو بادمجان', img: 'https://via.placeholder.com/400x300?text=کنسرو بادمجان' },
-        { name: 'کنسرو عدسی', img: 'https://via.placeholder.com/400x300?text=کنسرو عدسی' },
-        { name: 'خوراک لوبیا چیتی', img: 'https://via.placeholder.com/400x300?text=خوراک لوبیا چیتی' },
-        { name: 'خورشت قیمه آماده', img: 'https://via.placeholder.com/400x300?text=خورشت قیمه آماده' },
-        { name: 'خورشت قورمه‌سبزی آماده', img: 'https://via.placeholder.com/400x300?text=خورشت قورمه‌سبزی آماده' },
-        { name: 'کنسرو لوبیا با قارچ', img: 'https://via.placeholder.com/400x300?text=کنسرو لوبیا با قارچ' },
-        { name: 'غذای نیمه‌آماده ماکارونی', img: 'https://via.placeholder.com/400x300?text=غذای نیمه‌آماده ماکارونی' },
-        { name: 'پوره سیب‌زمینی آماده', img: 'https://via.placeholder.com/400x300?text=پوره سیب‌زمینی آماده' }
-      ] },
-      { title: 'تنقلات و اسنک', items: [
-        { name: 'چیپس نمکی', img: 'https://www.takpakhsh.co/uploads/ProductsPhotos/30972457/221330_2000.jpg' },
-        { name: 'چیپس فلفلی', img: 'https://via.placeholder.com/400x300?text=چیپس فلفلی' },
-        { name: 'پفک', img: 'https://via.placeholder.com/400x300?text=پفک' },
-        { name: 'پاپ‌کورن', img: 'https://via.placeholder.com/400x300?text=پاپ‌کورن' },
-        { name: 'بیسکویت ساقه طلایی', img: 'https://via.placeholder.com/400x300?text=بیسکویت ساقه طلایی' },
-        { name: 'ویفر شکلاتی', img: 'https://via.placeholder.com/400x300?text=ویفر شکلاتی' },
-        { name: 'شکلات تخته‌ای', img: 'https://via.placeholder.com/400x300?text=شکلات تخته‌ای' },
-        { name: 'شکلات مغزدار', img: 'https://via.placeholder.com/400x300?text=شکلات مغزدار' },
-        { name: 'شکلات تلخ', img: 'https://via.placeholder.com/400x300?text=شکلات تلخ' },
-        { name: 'آدامس', img: 'https://via.placeholder.com/400x300?text=آدامس' },
-        { name: 'تافی', img: 'https://via.placeholder.com/400x300?text=تافی' },
-        { name: 'آبنبات', img: 'https://via.placeholder.com/400x300?text=آبنبات' },
-        { name: 'بستنی', img: 'https://via.placeholder.com/400x300?text=بستنی' },
-        { name: 'پاستیل', img: 'https://via.placeholder.com/400x300?text=پاستیل' },
-        { name: 'بیسکویت کرم‌دار', img: 'https://via.placeholder.com/400x300?text=بیسکویت کرم‌دار' },
-        { name: 'چیپس سرکه‌ای', img: 'https://via.placeholder.com/400x300?text=چیپس سرکه‌ای' },
-        { name: 'چیپس خلالی', img: 'https://via.placeholder.com/400x300?text=چیپس خلالی' }
-      ] },
-      { title: 'نوشیدنی‌ها', items: [
-        { name: 'نوشابه کوکاکولا', img: 'https://www.jowhareh.com/images/Jowhareh/galleries/large_1b1c8adc-5740-436b-8c03-0abe2895ab2c.webp' },
-        { name: 'نوشابه پپسی', img: 'https://via.placeholder.com/400x300?text=نوشابه پپسی' },
-        { name: 'نوشابه فانتا', img: 'https://via.placeholder.com/400x300?text=نوشابه فانتا' },
-        { name: 'آب معدنی', img: 'https://via.placeholder.com/400x300?text=آب معدنی' },
-        { name: 'آب گازدار', img: 'https://via.placeholder.com/400x300?text=آب گازدار' },
-        { name: 'دلستر', img: 'https://via.placeholder.com/400x300?text=دلستر' },
-        { name: 'دوغ', img: 'https://via.placeholder.com/400x300?text=دوغ' },
-        { name: 'آبمیوه پرتقال', img: 'https://via.placeholder.com/400x300?text=آبمیوه پرتقال' },
-        { name: 'آبمیوه سیب', img: 'https://via.placeholder.com/400x300?text=آبمیوه سیب' },
-        { name: 'آبمیوه آناناس', img: 'https://via.placeholder.com/400x300?text=آبمیوه آناناس' },
-        { name: 'چای کیسه‌ای', img: 'https://via.placeholder.com/400x300?text=چای کیسه‌ای' },
-        { name: 'چای سیاه', img: 'https://via.placeholder.com/400x300?text=چای سیاه' },
-        { name: 'قهوه فوری', img: 'https://via.placeholder.com/400x300?text=قهوه فوری' },
-        { name: 'نسکافه', img: 'https://via.placeholder.com/400x300?text=نسکافه' },
-        { name: 'پودر کاکائو', img: 'https://via.placeholder.com/400x300?text=پودر کاکائو' },
-        { name: 'شربت لیمو', img: 'https://via.placeholder.com/400x300?text=شربت لیمو' },
-        { name: 'شربت آلبالو', img: 'https://via.placeholder.com/400x300?text=شربت آلبالو' }
-      ] },
-      { title: 'صبحانه', items: [
-        { name: 'نان تست', img: 'https://via.placeholder.com/400x300?text=نان تست' },
-        { name: 'نان لواش', img: 'https://via.placeholder.com/400x300?text=نان لواش' },
-        { name: 'مربای توت‌فرنگی', img: 'https://via.placeholder.com/400x300?text=مربای توت‌فرنگی' },
-        { name: 'مربای هویج', img: 'https://via.placeholder.com/400x300?text=مربای هویج' },
-        { name: 'عسل طبیعی', img: 'https://via.placeholder.com/400x300?text=عسل طبیعی' },
-        { name: 'کره بادام‌زمینی', img: 'https://via.placeholder.com/400x300?text=کره بادام‌زمینی' },
-        { name: 'کره حیوانی', img: 'https://via.placeholder.com/400x300?text=کره حیوانی' },
-        { name: 'شکلات صبحانه', img: 'https://via.placeholder.com/400x300?text=شکلات صبحانه' },
-        { name: 'پنیر خامه‌ای', img: 'https://via.placeholder.com/400x300?text=پنیر خامه‌ای' },
-        { name: 'تخم‌مرغ', img: 'https://via.placeholder.com/400x300?text=تخم‌مرغ' },
-        { name: 'چای صبحانه', img: 'https://via.placeholder.com/400x300?text=چای صبحانه' },
-        { name: 'قهوه فوری', img: 'https://via.placeholder.com/400x300?text=قهوه فوری' },
-        { name: 'شیر کاکائو', img: 'https://via.placeholder.com/400x300?text=شیر کاکائو' }
-      ] },
-      { title: 'پروتئینی', items: [
-        { name: 'سوسیس مرغ', img: 'https://via.placeholder.com/400x300?text=سوسیس مرغ' },
-        { name: 'سوسیس گوشت', img: 'https://via.placeholder.com/400x300?text=سوسیس گوشت' },
-        { name: 'کالباس', img: 'https://via.placeholder.com/400x300?text=کالباس' },
-        { name: 'ژامبون', img: 'https://via.placeholder.com/400x300?text=ژامبون' },
-        { name: 'همبرگر', img: 'https://via.placeholder.com/400x300?text=همبرگر' },
-        { name: 'مرغ تازه', img: 'https://via.placeholder.com/400x300?text=مرغ تازه' },
-        { name: 'ران مرغ', img: 'https://via.placeholder.com/400x300?text=ران مرغ' },
-        { name: 'فیله مرغ', img: 'https://via.placeholder.com/400x300?text=فیله مرغ' },
-        { name: 'گوشت گوساله', img: 'https://via.placeholder.com/400x300?text=گوشت گوساله' },
-        { name: 'گوشت گوسفند', img: 'https://via.placeholder.com/400x300?text=گوشت گوسفند' },
-        { name: 'ماهی قزل‌آلا', img: 'https://via.placeholder.com/400x300?text=ماهی قزل‌آلا' },
-        { name: 'ماهی تن تازه', img: 'https://via.placeholder.com/400x300?text=ماهی تن تازه' },
-        { name: 'میگو', img: 'https://via.placeholder.com/400x300?text=میگو' },
-        { name: 'تخم‌مرغ', img: 'https://via.placeholder.com/400x300?text=تخم‌مرغ' },
-        { name: 'جگر مرغ', img: 'https://via.placeholder.com/400x300?text=جگر مرغ' },
-        { name: 'دل و قلوه', img: 'https://via.placeholder.com/400x300?text=دل و قلوه' },
-        { name: 'ناگت مرغ', img: 'https://via.placeholder.com/400x300?text=ناگت مرغ' },
-        { name: 'فیله ماهی', img: 'https://via.placeholder.com/400x300?text=فیله ماهی' }
-      ] },
-      { title: 'غذای منجمد', items: [
-        { name: 'پیتزا آماده', img: 'https://via.placeholder.com/400x300?text=پیتزا آماده' },
-        { name: 'سمبوسه', img: 'https://via.placeholder.com/400x300?text=سمبوسه' },
-        { name: 'فلافل', img: 'https://via.placeholder.com/400x300?text=فلافل' },
-        { name: 'سیب‌زمینی سرخ‌کرده', img: 'https://via.placeholder.com/400x300?text=سیب‌زمینی سرخ‌کرده' },
-        { name: 'کتلت', img: 'https://via.placeholder.com/400x300?text=کتلت' },
-        { name: 'شنیسل مرغ', img: 'https://via.placeholder.com/400x300?text=شنیسل مرغ' },
-        { name: 'ناگت', img: 'https://via.placeholder.com/400x300?text=ناگت' },
-        { name: 'سبزی قورمه', img: 'https://via.placeholder.com/400x300?text=سبزی قورمه' },
-        { name: 'سبزی کوکو', img: 'https://via.placeholder.com/400x300?text=سبزی کوکو' },
-        { name: 'سبزی آش', img: 'https://via.placeholder.com/400x300?text=سبزی آش' },
-        { name: 'سبزی پلو', img: 'https://via.placeholder.com/400x300?text=سبزی پلو' }
-      ] },
-      { title: 'بهداشتی و شوینده', items: [
-        { name: 'شامپو بدن', img: 'https://via.placeholder.com/400x300?text=شامپو بدن' },
-        { name: 'شامپو مو', img: 'https://via.placeholder.com/400x300?text=شامپو مو' },
-        { name: 'نرم‌کننده مو', img: 'https://via.placeholder.com/400x300?text=نرم‌کننده مو' },
-        { name: 'صابون', img: 'https://via.placeholder.com/400x300?text=صابون' },
-        { name: 'مایع دستشویی', img: 'https://via.placeholder.com/400x300?text=مایع دستشویی' },
-        { name: 'مایع ظرفشویی', img: 'https://via.placeholder.com/400x300?text=مایع ظرفشویی' },
-        { name: 'پودر لباسشویی', img: 'https://via.placeholder.com/400x300?text=پودر لباسشویی' },
-        { name: 'سفیدکننده', img: 'https://via.placeholder.com/400x300?text=سفیدکننده' },
-        { name: 'ضدعفونی‌کننده', img: 'https://via.placeholder.com/400x300?text=ضدعفونی‌کننده' },
-        { name: 'دستمال کاغذی', img: 'https://via.placeholder.com/400x300?text=دستمال کاغذی' },
-        { name: 'دستمال توالت', img: 'https://via.placeholder.com/400x300?text=دستمال توالت' },
-        { name: 'پوشک بزرگسال', img: 'https://via.placeholder.com/400x300?text=پوشک بزرگسال' },
-        { name: 'شیشه پاک‌کن', img: 'https://via.placeholder.com/400x300?text=شیشه پاک‌کن' },
-        { name: 'اسپری خوشبوکننده', img: 'https://via.placeholder.com/400x300?text=اسپری خوشبوکننده' },
-        { name: 'خمیر دندان', img: 'https://via.placeholder.com/400x300?text=خمیر دندان' },
-        { name: 'مسواک', img: 'https://via.placeholder.com/400x300?text=مسواک' },
-        { name: 'نخ دندان', img: 'https://via.placeholder.com/400x300?text=نخ دندان' },
-        { name: 'کرم مرطوب‌کننده', img: 'https://via.placeholder.com/400x300?text=کرم مرطوب‌کننده' },
-        { name: 'لوسیون بدن', img: 'https://via.placeholder.com/400x300?text=لوسیون بدن' },
-        { name: 'افترشیو', img: 'https://via.placeholder.com/400x300?text=افترشیو' }
-      ] },
-      { title: 'کودک و نوزاد', items: [
-        { name: 'پوشک مولفیکس', img: 'https://via.placeholder.com/400x300?text=پوشک مولفیکس' },
-        { name: 'دستمال مرطوب', img: 'https://via.placeholder.com/400x300?text=دستمال مرطوب' },
-        { name: 'شیر خشک', img: 'https://via.placeholder.com/400x300?text=شیر خشک' },
-        { name: 'شیشه شیر', img: 'https://via.placeholder.com/400x300?text=شیشه شیر' },
-        { name: 'پستانک', img: 'https://via.placeholder.com/400x300?text=پستانک' },
-        { name: 'کرم کودک', img: 'https://via.placeholder.com/400x300?text=کرم کودک' },
-        { name: 'شامپو بچه', img: 'https://via.placeholder.com/400x300?text=شامپو بچه' },
-        { name: 'پودر بچه', img: 'https://via.placeholder.com/400x300?text=پودر بچه' },
-        { name: 'غذای کمکی نوزاد', img: 'https://via.placeholder.com/400x300?text=غذای کمکی نوزاد' },
-        { name: 'دستمال حوله‌ای کودک', img: 'https://via.placeholder.com/400x300?text=دستمال حوله‌ای کودک' }
-      ] },
-      { title: 'دستمال و شوینده خانگی', items: [
-        { name: 'دستمال آشپزخانه', img: 'https://via.placeholder.com/400x300?text=دستمال آشپزخانه' },
-        { name: 'اسکاچ', img: 'https://via.placeholder.com/400x300?text=اسکاچ' },
-        { name: 'سیم ظرفشویی', img: 'https://via.placeholder.com/400x300?text=سیم ظرفشویی' },
-        { name: 'ابر تمیزکننده', img: 'https://via.placeholder.com/400x300?text=ابر تمیزکننده' },
-        { name: 'جرم‌گیر', img: 'https://via.placeholder.com/400x300?text=جرم‌گیر' },
-        { name: 'شیشه پاک‌کن', img: 'https://via.placeholder.com/400x300?text=شیشه پاک‌کن' },
-        { name: 'اسپری ضدعفونی‌کننده', img: 'https://via.placeholder.com/400x300?text=اسپری ضدعفونی‌کننده' },
-        { name: 'مایع کف‌شوی', img: 'https://via.placeholder.com/400x300?text=مایع کف‌شوی' },
-        { name: 'سفیدکننده سطوح', img: 'https://via.placeholder.com/400x300?text=سفیدکننده سطوح' },
-        { name: 'اسپری خوشبوکننده محیط', img: 'https://via.placeholder.com/400x300?text=اسپری خوشبوکننده محیط' },
-        { name: 'مایع دستشویی فومی', img: 'https://via.placeholder.com/400x300?text=مایع دستشویی فومی' }
-      ] }
-    ];
-
-    function formatToman(n) { return Number(n).toLocaleString('fa-IR') + ' تومان'; }
-    function toast(msg, time = 1800) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      clearTimeout(t._hide);
-      t._hide = setTimeout(() => t.classList.remove('show'), time);
-    }
-    function saveCart() {
-      try {
-        localStorage.setItem(LS_CART, JSON.stringify(cart));
-      } catch (e) {
-        toast('خطا در ذخیره سبد خرید. حافظه مرورگر پر است.');
-      }
-    }
-    function saveUser() {
-      try {
-        localStorage.setItem(LS_USER, JSON.stringify(user));
-      } catch (e) {
-        toast('خطا در ذخیره اطلاعات کاربر.');
-      }
-    }
-    function saveOrders() {
-      try {
-        localStorage.setItem(LS_ORDERS, JSON.stringify(orders));
-      } catch (e) {
-        toast('خطا در ذخیره سفارش‌ها.');
-      }
-    }
-    if (darkMode) { document.body.classList.add('dark-mode'); }
-    function toggleDarkMode() {
-      darkMode = !darkMode;
-      document.body.classList.toggle('dark-mode');
-      localStorage.setItem(LS_DARK_MODE, JSON.stringify(darkMode));
-      toast(darkMode ? 'تم تیره فعال شد' : 'تم روشن فعال شد');
-    }
-
-    // برای تست: اضافه کردن محصولات نمونه
-    if (cart.length === 0) {
-      cart = [
-        { id: 'لبنیات_0', name: 'شیر کم‌چرب', price: 15000, quantity: 2, img: 'https://labaniyat.com/wp-content/uploads/2024/07/How-to-reduce-fat-in-milk-01.webp' },
-        { id: 'لبنیات_4', name: 'ماست ساده', price: 20000, quantity: 1, img: 'https://via.placeholder.com/400x300?text=ماست ساده' }
-      ];
-      saveCart();
-    }
-
-    function renderAddress() {
-      const addressLabel = document.getElementById('addressLabel');
-      addressLabel.textContent = user.address ? `📍 ${user.address}` : '📍 آدرس';
-      addressLabel.parentElement.classList.toggle('bold', !!user.address);
-    }
+    renderAccount();
     renderAddress();
+    toast('خروج انجام شد');
+  }
+});
+topupBtn.addEventListener('click', () => {
+  document.getElementById('topupModal').style.display = 'flex';
+});
+document.getElementById('confirmTopupBtn').addEventListener('click', () => {
+  let v = Number(document.getElementById('modalTopupValue').value);
+  if (v <= 0) {
+    toast('مبلغ معتبر نیست');
+    return;
+  }
+  user.wallet = (Number(user.wallet) || 0) + v;
+  saveUser();
+  renderAccount();
+  document.getElementById('modalTopupValue').value = '';
+  document.getElementById('topupModal').style.display = 'none';
+  toast(`کیف پول شما ${formatToman(v)} افزایش یافت`);
+});
+document.getElementById('cancelTopupBtn').addEventListener('click', () => {
+  document.getElementById('topupModal').style.display = 'none';
+  document.getElementById('modalTopupValue').value = '';
+});
 
-    const categoriesList = document.getElementById('categoriesList');
-    categories.forEach(c => {
-      const d = document.createElement('div');
-      d.className = 'cat-card';
-      d.tabIndex = 0;
-      d.innerHTML = `<div class="emoji">🛒</div><div style="font-weight:600">${c.title}</div>`;
-      categoriesList.appendChild(d);
-      d.addEventListener('click', () => showCategory(c));
-    });
+// مدیریت آدرس
+document.getElementById('addressBtn').addEventListener('click', () => {
+  document.getElementById('addressModal').style.display = 'flex';
+  document.getElementById('addressInput').value = user.address || '';
+});
+document.getElementById('confirmAddressBtn').addEventListener('click', () => {
+  const address = document.getElementById('addressInput').value.trim();
+  if (!address) {
+    toast('لطفاً آدرس را وارد کنید');
+    return;
+  }
+  user.address = address;
+  saveUser();
+  renderAddress();
+  document.getElementById('addressModal').style.display = 'none';
+  toast('آدرس ثبت شد');
+});
+document.getElementById('cancelAddressBtn').addEventListener('click', () => {
+  document.getElementById('addressModal').style.display = 'none';
+  document.getElementById('addressInput').value = '';
+});
 
-    const categoryPage = document.getElementById('categoryPage');
-    const categoryTitle = document.getElementById('categoryTitle');
-    const categoryProducts = document.getElementById('categoryProducts');
-    function showCategory(cat, highlightItem = null) {
-      showPage('categoryPage');
-      categoryTitle.textContent = cat.title;
-      categoryProducts.innerHTML = '';
-      cat.items.forEach((item, idx) => {
-        const p = typeof item === 'object' ? item : { name: item, img: 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(item) };
-        const price = Math.floor(Math.random() * 40000 + 5000);
-        const card = document.createElement('div');
-        card.className = 'prod-card';
-        if (highlightItem && p.name.includes(highlightItem)) card.classList.add('highlight');
-        card.innerHTML = `
-          <img src="${p.img}" alt="${p.name}">
-          <div class="title">${p.name}</div>
-          <div class="price">${formatToman(price)}</div>
-          <div class="actions">
-            <button class="btn-outline" data-action="details" data-id="${cat.title + '_' + idx}">جزئیات</button>
-            <button class="btn-primary" data-action="add" data-id="${cat.title + '_' + idx}">افزودن</button>
-          </div>`;
-        categoryProducts.appendChild(card);
-        card.querySelector('[data-action="add"]').addEventListener('click', () => { addToCart({ ...p, id: cat.title + '_' + idx, price }); });
-        card.querySelector('[data-action="details"]').addEventListener('click', () => toast(`${p.name} — ${formatToman(price)}`));
-      });
-    }
+// تنظیمات
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  document.getElementById('settingsModal').style.display = 'flex';
+  document.getElementById('settingsLanguage').value = user.language;
+});
+document.getElementById('settingsDarkMode').addEventListener('click', toggleDarkMode);
+document.getElementById('confirmSettingsBtn').addEventListener('click', () => {
+  user.language = document.getElementById('settingsLanguage').value;
+  saveUser();
+  document.getElementById('settingsModal').style.display = 'none';
+  toast('تنظیمات ذخیره شد');
+});
+document.getElementById('cancelSettingsBtn').addEventListener('click', () => {
+  document.getElementById('settingsModal').style.display = 'none';
+});
 
-    function getDiscountedProducts() {
-      const allItems = [];
-      categories.forEach(cat => {
-        cat.items.forEach((item, idx) => {
-          const name = typeof item === 'object' ? item.name : item;
-          const img = typeof item === 'object' ? item.img : 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(name);
-          allItems.push({
-            id: `${cat.title}_${idx}`,
-            name,
-            price: Math.floor(Math.random() * 40000 + 5000),
-            discountPrice: Math.floor(Math.random() * 30000 + 3000),
-            img
-          });
-        });
-      });
-      const uniqueItems = Array.from(new Set(allItems.map(item => item.id)))
-        .map(id => allItems.find(item => item.id === id))
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 5);
-      return uniqueItems;
-    }
+// ثبت سفارش
+const checkoutBtn = document.getElementById('checkoutBtn');
+checkoutBtn.addEventListener('click', () => {
+  if (cart.length === 0) {
+    toast('سبد خرید خالی است');
+    return;
+  }
+  const total = calcCartTotals().total;
+  if (user.wallet < total) {
+    toast('اعتبار کیف پول کافی نیست');
+    return;
+  }
+  user.wallet -= total;
+  saveUser();
+  const order = { id: 'ORD_' + (orders.length + 1), items: [...cart], total, createdAt: Date.now() };
+  orders.push(order);
+  saveOrders();
+  cart = [];
+  saveCart();
+  updateCartUI();
+  renderAccount();
+  renderOrders();
+  toast('سفارش ثبت شد');
+  showPage('homePage');
+});
 
-    function renderDiscountItems() {
-      const discountItems = document.getElementById('discountItems');
-      discountItems.innerHTML = '';
-      const discountedProducts = getDiscountedProducts();
-      discountedProducts.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'prod-card';
-        card.innerHTML = `
-          <img src="${p.img}" alt="${p.name}">
-          <div class="title">${p.name}</div>
-          <div class="price" style="text-decoration:line-through;color:var(--sub)">${formatToman(p.price)}</div>
-          <div class="price" style="color:var(--accent)">${formatToman(p.discountPrice)}</div>
-          <div class="actions">
-            <button class="btn-outline" data-action="details" data-id="${p.id}">جزئیات</button>
-            <button class="btn-primary" data-action="add" data-id="${p.id}">افزودن</button>
-          </div>`;
-        discountItems.appendChild(card);
-        card.querySelector('[data-action="add"]').addEventListener('click', () => { addToCart({ ...p, price: p.discountPrice }); });
-        card.querySelector('[data-action="details"]').addEventListener('click', () => { toast(`${p.name} — ${formatToman(p.discountPrice)} (تخفیف)`); });
-      });
-    }
+// ناوبری پایین
+document.querySelectorAll('.bottom-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    showPage(btn.dataset.page);
+    document.querySelectorAll('.bottom-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
 
-    function startDiscountTimer() {
-      const timerEl = document.getElementById('discountTimer');
-      function updateTimer() {
-        const now = new Date();
-        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-        const diff = endOfDay - now;
-        if (diff <= 0) {
-          timerEl.textContent = 'تخفیفات پایان یافت';
-          return;
-        }
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        timerEl.textContent = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      }
-      updateTimer();
-      setInterval(updateTimer, 1000);
-    }
-
-    const cartItemsContainer = document.getElementById('cartItems');
-    const cartTotalSpan = document.getElementById('cartTotal');
-    const cartFooter = document.getElementById('cartFooter');
-    const itemsCount = document.getElementById('itemsCount');
-    const cartBadge = document.getElementById('cartBadge');
-    function calcCartTotals() {
-      let total = 0, count = 0;
-      for (const it of cart) {
-        const line = Number(it.price) * Number(it.quantity);
-        total += line;
-        count += Number(it.quantity);
-      }
-      return { total, count };
-    }
-    function updateCartUI() {
-      cartItemsContainer.innerHTML = '';
-      if (cart.length === 0) {
-        cartItemsContainer.innerHTML = `
-          <div style="color:var(--sub);text-align:center;padding:16px;">
-            سبد خرید خالی است
-            <button class="small-btn" style="margin-top:8px" onclick="showPage('homePage')">شروع خرید</button>
-          </div>`;
-        cartFooter.style.display = 'none';
-        cartBadge.textContent = '';
-        return;
-      }
-      cartFooter.style.display = 'flex';
-      const { total, count } = calcCartTotals();
-      cartTotalSpan.textContent = formatToman(total);
-      itemsCount.textContent = `${count} آیتم`;
-      cartBadge.textContent = count > 0 ? `(${count})` : '';
-      cart.forEach((item, idx) => {
-        const div = document.createElement('div');
-        div.className = 'cart-item';
-        div.innerHTML = `
-          <img src="${item.img}" alt="${item.name}">
-          <div class="cart-item-info">
-            <div class="cart-item-title">${item.name}</div>
-            <div class="cart-item-price">${formatToman(item.price)} × ${item.quantity} = ${formatToman(item.price * item.quantity)}</div>
-            <div class="qty-controls" data-idx="${idx}">
-              <button data-op="minus" title="کم کردن">−</button>
-              <div style="min-width:36px;text-align:center;font-weight:700">${item.quantity}</div>
-              <button data-op="plus" title="افزایش">+</button>
-              <button style="margin-left:8px" class="remove-btn" data-op="remove" title="حذف">🗑️</button>
-            </div>
-          </div>`;
-        cartItemsContainer.appendChild(div);
-        setTimeout(() => div.classList.add('show'), 50 * idx);
-      });
-      saveCart();
-    }
-    cartItemsContainer.addEventListener('click', e => {
-      const btn = e.target.closest('button');
-      if (!btn) return;
-      const parent = btn.closest('.qty-controls');
-      if (!parent) return;
-      const idx = Number(parent.dataset.idx);
-      if (isNaN(idx) || !cart[idx]) return;
-      const op = btn.dataset.op;
-      const itemEl = parent.closest('.cart-item');
-      if (op === 'plus') {
-        cart[idx].quantity = Number(cart[idx].quantity) + 1;
-        toast('تعداد افزایش یافت');
-      } else if (op === 'minus') {
-        cart[idx].quantity = Number(cart[idx].quantity) - 1;
-        if (cart[idx].quantity <= 0) {
-          itemEl.style.opacity = '0';
-          itemEl.style.transform = 'translateX(-20px)';
-          setTimeout(() => {
-            cart.splice(idx, 1);
-            updateCartUI();
-            toast('محصول از سبد حذف شد');
-          }, 300);
-          return;
-        } else {
-          toast('تعداد کاهش یافت');
-        }
-      } else if (op === 'remove') {
-        itemEl.style.opacity = '0';
-        itemEl.style.transform = 'translateX(-20px)';
-        setTimeout(() => {
-          cart.splice(idx, 1);
-          updateCartUI();
-          toast('محصول حذف شد');
-        }, 300);
-        return;
-      }
-      updateCartUI();
-    });
-    function addToCart(product) {
-      const existing = cart.find(it => it.id === product.id);
-      if (existing) {
-        existing.quantity = Number(existing.quantity) + 1;
-      } else {
-        cart.push({ ...product, quantity: 1 });
-      }
-      toast(`"${product.name}" به سبد اضافه شد`);
-      updateCartUI();
-    }
-
-    const searchInput = document.getElementById('searchInput');
-    const clearSearch = document.getElementById('clearSearch');
-    let searchTimeout;
-    searchInput.addEventListener('input', () => {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(() => { applySearch(); }, 300);
-    });
-    clearSearch.addEventListener('click', () => {
-      searchInput.value = '';
-      toast('نمایش همهٔ دسته‌بندی‌ها');
-      showPage('homePage');
-    });
-    function applySearch() {
-      const q = searchInput.value.trim();
-      if (!q) {
-        toast('نمایش همهٔ دسته‌بندی‌ها');
-        showPage('homePage');
-        return;
-      }
-      let found = false;
-      categories.forEach(cat => {
-        const matchingItems = cat.items.filter(item => (typeof item === 'object' ? item.name : item).includes(q));
-        if (matchingItems.length > 0) {
-          showCategory(cat, q);
-          found = true;
-        }
-      });
-      if (found) {
-        toast('محصولات پیدا شد');
-      } else {
-        toast('هیچ محصولی پیدا نشد');
-        showPage('homePage');
-      }
-    }
-
-    const acctName = document.getElementById('acctName');
-    const acctPhone = document.getElementById('acctPhone');
-    const walletAmount = document.getElementById('walletAmount');
-    const ordersList = document.getElementById('ordersList');
-    const editProfileBtn = document.getElementById('editProfileBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const topupBtn = document.getElementById('topupBtn');
-    if (!user.name) user = { name: 'کاربر مهمان', phone: '۰۹۰۰۰۰۰۰۰۰', wallet: 100000, address: '', language: 'fa' };
-    saveUser();
-    function renderAccount() {
-      acctName.textContent = user.name || 'نام کاربر';
-      acctPhone.textContent = user.phone || '۰۹۰۰۰۰۰۰۰۰';
-      walletAmount.textContent = formatToman(Number(user.wallet || 0));
-    }
-    function renderOrders() {
-      ordersList.innerHTML = '';
-      if (orders.length === 0) {
-        ordersList.innerHTML = '<div style="color:var(--sub)">هیچ سفارشی وجود ندارد.</div>';
-        return;
-      }
-      orders.forEach(o => {
-        const d = document.createElement('div');
-        d.className = 'order-item';
-        const date = new Date(o.createdAt);
-        const itemsSummary = o.items.map(it => `${it.name} × ${it.quantity}`).join('، ');
-        const paymentText = o.payment === 'wallet' ? 'کیف پول' : o.payment === 'cod' ? 'پرداخت درب منزل' : 'پرداخت آنلاین';
-        d.innerHTML = `
-          <div style="font-weight:700">#${o.id.split('_')[1]}</div>
-          <div style="color:var(--sub);font-size:13px;margin-top:6px">${itemsSummary}</div>
-          <div style="color:var(--sub);font-size:13px;margin-top:4px">روش پرداخت: ${paymentText}</div>
-          <div style="display:flex;justify-content:space-between;margin-top:8px">
-            <div style="font-weight:700">${formatToman(o.total)}</div>
-            <div style="color:var(--sub);font-size:13px">${date.toLocaleString('fa-IR')}</div>
-          </div>`;
-        ordersList.appendChild(d);
-      });
+// مدیریت صفحات با مخفی کردن جستجو در حساب
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const searchWrap = document.querySelector('.search-wrap');
+  const settingsBtn = document.getElementById('settingsBtn');
+  if (id === 'accountPage') {
+    searchWrap.style.opacity = 0;
+    searchWrap.style.display = 'none';
+    settingsBtn.style.display = 'block';
+  } else {
+    searchWrap.style.display = 'block';
+    setTimeout(() => { searchWrap.style.opacity = 1; }, 10);
+    settingsBtn.style.display = 'none';
+  }
+}
+updateCartUI();
+renderDiscountItems();
+startDiscountTimer();
+document.getElementById('toggleDarkMode').addEventListener('click', toggleDarkMode);
+</script>
+</body>
+</html>
